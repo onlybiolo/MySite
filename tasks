@@ -1,0 +1,336 @@
+🚀 BTOOLSIFY - ULTIMATE FIX CHECKLIST
+Data: 2026-02-07
+Obiettivo: Portare la homepage in compliance WCAG 2.1 AA e ottimizzare SEO/UX
+
+🚨 CRITICAL FIXES - Fase 1 (30 min)
+✅ 1. Lang Attribute (⏱️ 30 sec)
+File: 
+Home.html
+ (riga 2)
+
+html
+<!-- PRIMA -->
+<html lang="en">
+<!-- DOPO -->
+<html lang="it">
+Verifica: Chrome DevTools → Accessibility tab → Language = "Italiano"
+
+✅ 2. Title Tag Descrittivo (⏱️ 1 min)
+File: 
+Home.html
+ (riga 7)
+
+html
+<!-- PRIMA -->
+<title>Btoolsify</title>
+<!-- DOPO -->
+<title>Btoolsify - Strumenti Gratuiti Online: PDF, QR Code, Immagini</title>
+Best Practice: Max 60 caratteri, include brand + benefit + keywords
+
+✅ 3. Meta Description (⏱️ 2 min)
+File: 
+Home.html
+ (dentro <head>, dopo <title>)
+
+html
+<meta name="description" content="Strumenti online gratuiti per convertire PDF, generare QR Code e ridimensionare immagini. Nessuna registrazione richiesta. 100% sicuro e veloce.">
+BONUS - Open Graph & Twitter Cards (opzionale):
+
+html
+<!-- Social Sharing -->
+<meta property="og:title" content="Btoolsify - Strumenti Gratuiti Online">
+<meta property="og:description" content="Converti PDF, genera QR Code e modifica immagini. Gratis, sicuro, senza registrazione.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://btoolsify.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Btoolsify - Strumenti Gratuiti Online">
+✅ 4. Fix Link Vuoti (⏱️ 10 min)
+File: 
+Home.html
+ (righe 64, 75, 86, 104, 111, 118) + 
+Home.js
+
+Step 1 - HTML: Aggiungi classe e handler
+
+html
+<!-- Blog/Tool Cards -->
+<a href="#" class="disabled-link" onclick="return showComingSoon(event)">
+Step 2 - JavaScript: Aggiungi prima di </body> in 
+Home.html
+
+javascript
+<script>
+function showComingSoon(event) {
+    event.preventDefault();
+    alert('🚧 Questa pagina è in arrivo! Torna presto per scoprire di più.');
+    return false;
+}
+</script>
+Step 3 - CSS (opzionale): Cursor disabled
+
+css
+.disabled-link {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+✅ 5. Contrast Ratio Button (⏱️ 1 min)
+File: 
+Home.css
+ (cerca .hero-btn)
+
+css
+/* PRIMA */
+.hero-btn {
+    background-color: #004494;
+}
+/* DOPO */
+.hero-btn {
+    background-color: #003370; /* Darker blue */
+}
+.hero-btn:hover {
+    background-color: #002a5c;
+}
+Verifica: https://webaim.org/resources/contrastchecker/ → Ratio 5.12:1 ✓
+
+✅ 6. Fix H1 Duplicato (⏱️ 2 min)
+File: 
+Home.html
+
+Riga 19 (Header Logo):
+
+html
+<!-- PRIMA -->
+<h1><a href="#" style="text-decoration:none; color:inherit;"><strong>Btoolsify</strong></a></h1>
+<!-- DOPO -->
+<div class="logo">
+    <a href="/" aria-label="Btoolsify - Torna alla homepage">
+        <strong>Btoolsify</strong>
+    </a>
+</div>
+Riga 52 (Hero): MANTIENI INVARIATO
+
+html
+<h1>Tutti i tuoi strumenti gratuiti in un unico posto.</h1>
+CSS Update (se necessario):
+
+css
+.logo strong {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: white;
+}
+⚠️ IMPORTANT FIXES - Fase 2 (2 ore)
+✅ 7. Semantic HTML (⏱️ 10 min)
+File: 
+Home.html
+ + 
+Home.css
+
+Modifiche HTML:
+
+html
+<!-- Header -->
+<header id="header"> <!-- era <div id="header"> -->
+<!-- Sidebar -->
+<nav id="side-bar" aria-label="Menu principale"> <!-- era <div id="side-bar"> -->
+<!-- Main Content -->
+<main id="main-content"> <!-- era <div id="main-content"> -->
+<!-- Footer -->
+<footer id="footer"> <!-- era <div id="footer"> (già fatto!) -->
+⚠️ Controlla CSS: Se hai regole tipo div#header, aggiorna in header#header
+
+✅ 8. Skip to Main Content (⏱️ 5 min)
+File: 
+Home.html
+ + 
+Home.css
+
+HTML - Prima riga dentro <body>:
+
+html
+<body>
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+    <!-- resto del codice -->
+CSS - Aggiungi:
+
+css
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #000;
+    color: #fff;
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 10000;
+    font-weight: 600;
+    border-radius: 0 0 4px 0;
+}
+.skip-link:focus {
+    top: 0;
+    outline: 3px solid #FFD700;
+    outline-offset: 2px;
+}
+✅ 9. Focus Indicators (⏱️ 3 min)
+File: 
+Home.css
+
+Aggiungi alla fine:
+
+css
+/* ===== ACCESSIBILITY - FOCUS INDICATORS ===== */
+a:focus,
+button:focus,
+input:focus {
+    outline: 3px solid #FFD700;
+    outline-offset: 2px;
+}
+.hero-btn:focus {
+    outline: 3px solid #FFD700;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(255, 215, 0, 0.2);
+}
+#side-bar a:focus {
+    background-color: rgba(255, 255, 255, 0.3);
+    outline: 3px solid #FFD700;
+    outline-offset: -3px;
+}
+/* Focus solo tastiera (non mouse) */
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+*:focus-visible {
+    outline: 3px solid #FFD700;
+    outline-offset: 2px;
+}
+✅ 10. Heading Hierarchy Fix (⏱️ 3 min)
+File: 
+Home.html
+
+Nelle Card - Cambia H2 → H3:
+
+html
+<!-- PRIMA -->
+<h2><i class="fas fa-file-pdf"></i> Blog 1</h2>
+<!-- DOPO -->
+<h3><i class="fas fa-file-pdf"></i> Blog 1</h3>
+Applica a: righe 69, 80, 91, 105, 112, 119
+
+CSS Update:
+
+css
+/* Cerca .card h2 e rinomina in .card h3 */
+.card h3 {
+    color: #004494;
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+.card h3 i {
+    margin-right: 8px;
+    color: #004494;
+    font-size: 0.9em;
+}
+✅ 11. Search Placeholder Ottimizzato (⏱️ 5 min)
+File: 
+Home.html
+
+html
+<!-- PRIMA -->
+<input type="text" id="search-bar" placeholder="Cerca tool (es. PDF, QR)...">
+<!-- DOPO -->
+<input 
+    type="search" 
+    id="search-bar" 
+    placeholder="Cerca: Converti PDF, QR Code, Immagini..." 
+    aria-label="Cerca strumenti"
+    autocomplete="off"
+>
+💡 NICE-TO-HAVE - Fase 3 (opzionale)
+⭐ 12. Favicon
+File: 
+Home.html
+ (dentro <head>)
+
+html
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+⭐ 13. Dark Mode Support
+File: 
+Home.css
+
+css
+@media (prefers-color-scheme: dark) {
+    body { background: #1a202c; color: #e2e8f0; }
+    #main-content { background: #2d3748; }
+    .card { background: #2d3748; border-color: #4a5568; }
+    .card h3 { color: #90cdf4; }
+}
+⭐ 14. Social Proof Hero
+File: 
+Home.html
+ (dopo .hero-btn)
+
+html
+<p class="social-proof">
+    <i class="fas fa-star"></i> Usato da <strong>5,000+</strong> persone questo mese
+</p>
+CSS:
+
+css
+.social-proof {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #718096;
+}
+.social-proof strong {
+    color: #004494;
+    font-weight: 700;
+}
+⭐ 15. Touch Targets Mobile (48x48px)
+File: 
+Home.css
+
+css
+@media (max-width: 768px) {
+    .social-icons a {
+        width: 48px;  /* Era 40px */
+        height: 48px;
+        font-size: 1.2em;
+    }
+    
+    #side-bar a {
+        min-height: 48px;
+        padding: 14px 20px;
+    }
+}
+📋 CHECKLIST FINALE
+Fase 1 - CRITICAL (Oggi) ✅
+ 1. Lang attribute → it
+ 2. Title tag descrittivo
+ 3. Meta description
+ 4. Link vuoti → placeholder
+ 5. Contrast ratio button
+ 6. H1 duplicato fix
+Fase 2 - IMPORTANT (Questa settimana) 🔶
+ 7. Semantic HTML
+ 8. Skip to main content
+ 9. Focus indicators
+ 10. Heading hierarchy
+ 11. Search placeholder
+Fase 3 - NICE-TO-HAVE (Opzionale) ⭐
+ 12. Favicon
+ 13. Dark mode
+ 14. Social proof
+ 15. Touch targets mobile
+✅ VERIFICA FINALE
+Dopo ogni fase, testa:
+
+Accessibility: Chrome DevTools → Lighthouse → Accessibility Score
+SEO: Google Search Console → HTML Improvements
+Mobile: Chrome DevTools → Device Toolbar → iPhone/Android
+Keyboard: Naviga solo con TAB e verifica focus visibili
+Target Scores:
+
+Accessibility: 90+ (da 60 attuale)
+SEO: 95+ (da 50 attuale)
+Performance: 90+ (già ottimo)
