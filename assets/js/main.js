@@ -148,7 +148,42 @@ document.addEventListener('DOMContentLoaded', () => {
             if (searchContainer.classList.contains('active')) searchBar.focus();
         });
     }
+
+    /* --- READING MODE LOGIC --- */
+    const readingModeToggle = document.getElementById('reading-mode-toggle');
+
+    function applyReadingMode(enabled) {
+        if (enabled) {
+            body.classList.add('reading-mode');
+        } else {
+            body.classList.remove('reading-mode');
+        }
+        localStorage.setItem('readingMode', enabled);
+
+        if (readingModeToggle) {
+            const icon = readingModeToggle.querySelector('i');
+            if (icon) {
+                icon.className = enabled ? 'fas fa-compress-arrows-alt' : 'fas fa-expand-alt';
+            }
+            readingModeToggle.title = enabled ? 'Esci dalla modalità lettura' : 'Modalità lettura (Fullscreen)';
+        }
+    }
+
+    if (readingModeToggle) {
+        readingModeToggle.addEventListener('click', () => {
+            const isEnabled = body.classList.contains('reading-mode');
+            applyReadingMode(!isEnabled);
+        });
+
+        // Initialize from storage or default off for new page loads usually, 
+        // but here we follow dark mode pattern
+        const savedReadingMode = localStorage.getItem('readingMode') === 'true';
+        if (savedReadingMode) {
+            applyReadingMode(true);
+        }
+    }
 });
+
 
 /* --- GLOBAL MODAL LOGIC (Accessible from anywhere) --- */
 function showComingSoon(event) {
