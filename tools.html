@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutti gli Strumenti | Btoolsify</title>
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <!-- Styles -->
+    <meta name="description"
+        content="Esplora tutti gli strumenti gratuiti di Btoolsify: convertitori PDF, editor immagini, utility di testo e altro ancora. 100% gratis e sicuro.">
+    <meta name="keywords" content="PDF tools, image editor, utility online, gratis">
+    <meta property="og:title" content="Strumenti Gratuiti - Btoolsify">
+    <meta property="og:description" content="Collezione completa di strumenti smart online.">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <!-- Anti-FOUC: Apply theme before render -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <style>
+        /* Additional styles for filter chips */
+        .filter-section {
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-chip {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-chip:hover {
+            border-color: var(--brand-primary);
+            transform: translateY(-1px);
+        }
+
+        .filter-chip.active {
+            background-color: var(--brand-primary);
+            color: white;
+            border-color: var(--brand-primary);
+        }
+
+        .filter-chip:focus {
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
+        }
+
+        /* Compact hero for tools page */
+        .tools-hero {
+            background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-body) 100%);
+            padding: 30px 20px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .tools-hero h1 {
+            color: var(--brand-primary);
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .tools-hero p {
+            color: var(--text-muted);
+            font-size: 1em;
+            margin: 0 auto;
+        }
+
+        /* Active sidebar link */
+        #side-bar a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+
+    <header id="header">
+        <!-- Mobile: Logo left, controls right -->
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="logo">
+                <a href="index.html" aria-label="Btoolsify - Torna alla homepage">
+                    <strong>Btoolsify</strong>
+                </a>
+            </div>
+        </div>
+
+        <!-- Search Bar (center on desktop) -->
+        <div class="search-container">
+            <input type="search" id="search-bar" placeholder="Cerca: Converti PDF, QR Code, Immagini..."
+                aria-label="Cerca strumenti" autocomplete="off">
+            <button id="search-btn" aria-label="Cerca"><i class="fas fa-search"></i></button>
+            <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+
+        <!-- Right controls -->
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="mobile-search-toggle" aria-label="Apri ricerca">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <nav id="side-bar" aria-label="Menu principale">
+            <a href="index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="tools.html"><i class="fas fa-tools"></i><span>Strumenti Gratis</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-newspaper"></i><span>Guide Recenti</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>I Più Usati</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-info-circle"></i><span>Chi Siamo</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-envelope"></i><span>Contatti</span></a>
+        </nav>
+
+        <main id="main-content">
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumbs" aria-label="Percorso di navigazione">
+                <ol>
+                    <li><a href="index.html">Home</a></li>
+                    <li aria-current="page">Strumenti</li>
+                </ol>
+            </nav>
+
+            <!-- Compact Hero -->
+            <div class="tools-hero">
+                <h1>Esplora i Nostri Strumenti</h1>
+                <p>Tutti gli strumenti di cui hai bisogno, gratuiti e facili da usare</p>
+            </div>
+
+            <!-- Filter Chips -->
+            <div class="filter-section">
+                <div class="filter-chips">
+                    <button class="filter-chip active" data-filter="all" aria-pressed="true">Tutti</button>
+                    <button class="filter-chip" data-filter="pdf" aria-pressed="false">PDF</button>
+                    <button class="filter-chip" data-filter="immagini" aria-pressed="false">Immagini</button>
+                    <button class="filter-chip" data-filter="testo" aria-pressed="false">Testo</button>
+                    <button class="filter-chip" data-filter="sicurezza" aria-pressed="false">Sicurezza</button>
+                    <button class="filter-chip" data-filter="utilita" aria-pressed="false">Utilità</button>
+                </div>
+            </div>
+
+            <!-- Tools Grid -->
+            <div class="content-section">
+                <div id="tools-grid" class="card-grid">
+                    <!-- PDF Tools -->
+                    <div class="card" data-category="pdf">
+                        <a href="#" onclick="return showComingSoon(event)">
+                            <h3><i class="fas fa-file-pdf"></i> JPG to PDF</h3>
+                            <p>Converti le tue immagini JPG in documenti PDF professionali in pochi secondi.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <div class="card" data-category="pdf">
+                        <a href="#" onclick="return showComingSoon(event)">
+                            <h3><i class="fas fa-file-pdf"></i> Merge PDF</h3>
+                            <p>Unisci più file PDF in un unico documento. Semplice e veloce.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <div class="card" data-category="pdf">
+                        <a href="#" onclick="return showComingSoon(event)">
+                            <h3><i class="fas fa-file-pdf"></i> Split PDF</h3>
+                            <p>Dividi un PDF grande in file più piccoli. Estrai pagine specifiche.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <!-- Image Tools -->
+                    <div class="card" data-category="immagini">
+                        <a href="#" onclick="return showComingSoon(event)">
+                            <h3><i class="fas fa-image"></i> Image Resizer</h3>
+                            <p>Ridimensiona le tue immagini mantenendo la qualità. Supporta JPG, PNG, WebP.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <div class="card" data-category="immagini">
+                        <a href="#" onclick="return showComingSoon(event)">
+                            <h3><i class="fas fa-compress"></i> Image Compressor</h3>
+                            <p>Comprimi le immagini riducendo la dimensione del file senza perdere qualità.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <div class="card" data-category="utilita">
+                        <a href="tools/palette-picker.html">
+                            <h3><i class="fas fa-palette"></i> AI Palette Picker</h3>
+                            <p>Genera palette di colori intelligenti basate sulla tua ispirazione.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <!-- Text Tools -->
+                    <div class="card" data-category="testo">
+                        <a href="#" onclick="return showComingSoon(event)">
+                            <h3><i class="fas fa-font"></i> Word Counter</h3>
+                            <p>Conta parole, caratteri e righe. Perfetto per scrittori e studenti.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <div class="card" data-category="testo">
+                        <a href="#" onclick="return showComingSoon(event)">
+                            <h3><i class="fas fa-text-height"></i> Case Converter</h3>
+                            <p>Converti testo in maiuscolo, minuscolo, title case o camelCase.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <!-- Security Tools -->
+                    <div class="card" data-category="sicurezza">
+                        <a href="#" onclick="return showComingSoon(event)">
+                            <h3><i class="fas fa-key"></i> Password Generator</h3>
+                            <p>Genera password sicure e casuali con opzioni personalizzabili.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <div class="card" data-category="sicurezza">
+                        <a href="#" onclick="return showComingSoon(event)">
+                            <h3><i class="fas fa-hashtag"></i> Hash Generator</h3>
+                            <p>Genera hash MD5, SHA-1, SHA-256 per verificare l'integrità dei file.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <!-- Utility Tools -->
+                    <div class="card" data-category="utilita">
+                        <a href="tools/qr-generator.html">
+                            <h3><i class="fas fa-qrcode"></i> QR Code Generator</h3>
+                            <p>Crea QR code personalizzati per URL, testo, contatti e altro.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+
+                    <div class="card" data-category="utilita">
+                        <a href="#" onclick="return showComingSoon(event)">
+                            <h3><i class="fas fa-code"></i> Base64 Encoder</h3>
+                            <p>Codifica e decodifica stringhe in formato Base64.</p>
+                            <span class="cta-text">Usa Strumento <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Educational Content -->
+            <div class="content-section tool-education">
+                <div class="education-grid">
+                    <section class="how-it-works">
+                        <h2 class="section-title">Come Funziona</h2>
+                        <div class="steps-container">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h5>Scegli lo Strumento</h5>
+                                    <p>Sfoglia la nostra collezione e seleziona il tool più adatto alle tue esigenze.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h5>Carica o Inserisci Dati</h5>
+                                    <p>Trascina i tuoi file o inserisci il testo direttamente nell'interfaccia sicura.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h5>Scarica il Risultato</h5>
+                                    <p>Elaborazione istantanea nel browser. Scarica i tuoi file ottimizzati in un click.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="faq-section">
+                        <h2 class="section-title">Domande Frequenti</h2>
+                        <div class="faq-accordion">
+                            <details>
+                                <summary>I vostri strumenti sono davvero gratuiti?</summary>
+                                <p>Sì, tutti gli strumenti su Btoolsify sono 100% gratuiti e possono essere usati senza
+                                    limiti giornalieri.</p>
+                            </details>
+                            <details>
+                                <summary>I miei file sono al sicuro?</summary>
+                                <p>Assolutamente. La maggior parte dei nostri strumenti elabora i dati direttamente nel
+                                    tuo browser, senza mai caricarli sui nostri server.</p>
+                            </details>
+                            <details>
+                                <summary>Devo registrarmi per usare i tool?</summary>
+                                <p>No, non è richiesta alcuna registrazione o account per accedere alle funzionalità
+                                    complete.</p>
+                            </details>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <aside id="right-sidebar" aria-label="Contenuti correlati">
+            <div class="sidebar-section">
+                <h4><i class="fas fa-fire"></i> Strumenti Popolari</h4>
+                <ul class="trending-list">
+                    <li><a href="#">JPG to PDF</a></li>
+                    <li><a href="#">QR Generator</a></li>
+                    <li><a href="#">Image Resizer</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section ad-placeholder">
+                <!-- AdSense Auto Ads Slot -->
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                    data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <div class="sidebar-section">
+                <h4><i class="fas fa-newspaper"></i> Ultime Guide</h4>
+                <ul class="trending-list">
+                    <li><a href="#">Ottimizzare immagini Web</a></li>
+                    <li><a href="#">Guida ai PDF sicuri</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Mobile Tab Navigation -->
+    <nav class="mobile-tabs" aria-label="Navigazione mobile rapida">
+        <a href="index.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-search"></i><span>Cerca</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Trend</span></a>
+    </nav>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Btoolsify</h3>
+                <p>Strumenti smart per persone smart. Semplifica la tua vita digitale.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Link Utili</h4>
+                <ul>
+                    <li><a href="#" onclick="showComingSoon(event)">Chi Siamo</a></li>
+                    <li><a href="#" onclick="showComingSoon(event)">Contatti</a></li>
+                    <li><a href="#" onclick="showComingSoon(event)">Privacy Policy</a></li>
+                    <li><a href="#" onclick="showComingSoon(event)">Termini di Servizio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Seguici</h4>
+                <div class="social-icons">
+                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-facebook"></i></a>
+                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-instagram"></i></a>
+                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-twitter"></i></a>
+                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Only Filter functionality remains here as it is page-specific
+        const filterChips = document.querySelectorAll('.filter-chip');
+        const toolCards = document.querySelectorAll('#tools-grid .card');
+
+        filterChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                const filter = chip.dataset.filter;
+
+                filterChips.forEach(c => {
+                    c.classList.remove('active');
+                    c.setAttribute('aria-pressed', 'false');
+                });
+                chip.classList.add('active');
+                chip.setAttribute('aria-pressed', 'true');
+
+                toolCards.forEach(card => {
+                    if (filter === 'all' || card.dataset.category === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="data/search-index.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

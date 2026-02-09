@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generatore QR Code | Btoolsify</title>
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <!-- CSS -->
+    <meta name="description"
+        content="Crea QR Code personalizzati gratuitamente. Inserisci URL o testo e scarica il tuo codice QR in alta qualità. 100% sicuro e veloce.">
+
+    <!-- CSS Paths updated for subfolder -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        .tool-container {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow-card);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .tool-tabs {
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 25px;
+        }
+
+        .tool-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tool-tab.active {
+            color: var(--brand-primary);
+            border-bottom-color: var(--brand-primary);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .tool-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .qr-preview-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            /* Always white for QR contrast */
+            border-radius: 12px;
+            margin-top: 20px;
+            width: fit-content;
+            margin: 20px auto;
+        }
+
+        #qrcode img {
+            max-width: 100%;
+        }
+
+        .download-btn {
+            background-color: var(--brand-primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .download-btn:hover {
+            background-color: var(--brand-hover);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .file-upload-zone {
+            border: 2px dashed var(--border-subtle);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .file-upload-zone:hover {
+            border-color: var(--brand-primary);
+        }
+    </style>
+
+    <!-- Anti-FOUC -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="logo">
+                <a href="../index.html" aria-label="Btoolsify - Torna alla homepage"><strong>Btoolsify</strong></a>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="search" id="search-bar" placeholder="Cerca strumenti..." aria-label="Cerca strumenti"
+                autocomplete="off">
+            <button id="search-btn" aria-label="Cerca"><i class="fas fa-search"></i></button>
+            <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema"><i class="fas fa-moon"></i></button>
+            <button id="mobile-search-toggle" aria-label="Apri ricerca"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <nav id="side-bar" aria-label="Menu principale">
+            <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti Gratis</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-newspaper"></i><span>Guide Recenti</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>I Più Usati</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-info-circle"></i><span>Chi Siamo</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-envelope"></i><span>Contatti</span></a>
+        </nav>
+
+        <main id="main-content">
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../tools.html">Strumenti</a></li>
+                    <li aria-current="page">Generatore QR Code</li>
+                </ol>
+            </nav>
+
+            <div class="content-section">
+                <h1 class="section-title">Generatore QR Code Gratis</h1>
+                <p class="section-intro" style="margin-bottom: 30px; color: var(--text-muted);">
+                    Crea codici QR professionali istantaneamente. Supporta link, testi e conversione immagini.
+                </p>
+
+                <div class="tool-container">
+                    <div class="tool-tabs">
+                        <div id="tabText" class="tool-tab active" onclick="switchMode('text')">Testo / URL</div>
+                        <div id="tabFile" class="tool-tab" onclick="switchMode('file')">Immagine (Logo)</div>
+                    </div>
+
+                    <div id="textMode" class="input-group">
+                        <label for="dataInput">Inserisci l'URL o il Testo</label>
+                        <textarea id="dataInput" class="tool-textarea"
+                            placeholder="Esempio: https://btoolsify.com"></textarea>
+                    </div>
+
+                    <div id="fileMode" class="input-group hidden">
+                        <label>Converti Immagine in QR</label>
+                        <div class="file-upload-zone" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-cloud-upload-alt"
+                                style="font-size: 2em; color: var(--brand-primary); margin-bottom: 15px;"></i>
+                            <p>Clicca per caricare un'immagine<br><small>(Le immagini piccole funzionano meglio)</small>
+                            </p>
+                            <input type="file" id="fileInput" class="hidden" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="qr-preview-area">
+                        <div id="qrcode"></div>
+                    </div>
+
+                    <button onclick="downloadQR()" class="download-btn">
+                        <i class="fas fa-download"></i> Scarica QR Code (PNG)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Educational Content -->
+            <div class="content-section tool-education">
+                <div class="education-grid">
+                    <section class="how-it-works">
+                        <h2 class="section-title">Come Funziona</h2>
+                        <div class="steps-container">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h5>Inserisci i Dati</h5>
+                                    <p>Scrivi il link o il testo che vuoi trasformare in codice QR.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h5>Anteprima Real-time</h5>
+                                    <p>Il codice QR si aggiorna istantaneamente mentre digiti.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h5>Scarica il File</h5>
+                                    <p>Clicca sul pulsante di download per ottenere un'immagine PNG pronta all'uso.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="faq-section">
+                        <h2 class="section-title">Domande Frequenti</h2>
+                        <div class="faq-accordion">
+                            <details>
+                                <summary>I QR Code hanno una scadenza?</summary>
+                                <p>No, i codici generati sono statici e funzioneranno per sempre.</p>
+                            </details>
+                            <details>
+                                <summary>Posso usare il QR per scopi commerciali?</summary>
+                                <p>Sì, puoi usare i codici generati su Btoolsify per qualsiasi scopo, anche commerciale.
+                                </p>
+                            </details>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <aside id="right-sidebar">
+            <div class="sidebar-section">
+                <h4><i class="fas fa-fire"></i> Più Popolari</h4>
+                <ul class="trending-list">
+                    <li><a href="#">PDF to JPG</a></li>
+                    <li><a href="#">Word Counter</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section ad-placeholder">
+                <p>Annuncio</p>
+            </div>
+        </aside>
+    </div>
+
+    <nav class="mobile-tabs" aria-label="Navigazione mobile">
+        <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-search"></i><span>Cerca</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Trend</span></a>
+    </nav>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Btoolsify</h3>
+                <p>Strumenti smart per persone smart. Semplifica la tua vita digitale.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Link Utili</h4>
+                <ul>
+                    <li><a href="#" onclick="showComingSoon(event)">Chi Siamo</a></li>
+                    <li><a href="#" onclick="showComingSoon(event)">Contatti</a></li>
+                    <li><a href="#" onclick="showComingSoon(event)">Privacy Policy</a></li>
+                    <li><a href="#" onclick="showComingSoon(event)">Termini di Servizio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Seguici</h4>
+                <div class="social-icons">
+                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-facebook"></i></a>
+                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-instagram"></i></a>
+                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-twitter"></i></a>
+                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <script src="../data/search-index.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/qr-generator.js"></script>
+</body>
+
+</html>

@@ -7,14 +7,20 @@ const searchIndex = [
         type: "blog"
     },
     {
-        name: "Tool 1 (Calculator)",
-        url: "#tool1", // Replace with real URL later
+        name: "Mood Palette Picker",
+        url: "tools/palette-picker.html",
+        tags: ["colori", "design", "mood", "feeling", "palette"],
+        type: "Strumento"
+    },
+    {
+        name: "Calculator",
+        url: "#tool1", // Placeholder
         tags: ["calcolatrice", "matematica", "conti", "tool"],
         type: "tool"
     },
     {
         name: "QR Code Generator",
-        url: "#tool2", // Placeholder
+        url: "tools/qr-generator.html",
         tags: ["qr", "code", "generatore", "scan", "barre"],
         type: "tool"
     },
