@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://btoolsify.netlify.app/sitemap.xml
