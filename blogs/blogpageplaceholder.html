@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><!-- BLOG TITLE PLACEHOLDER --> | Btoolsify Blog</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="<!-- DESCRIPTION PLACEHOLDER -->">
+    <meta name="keywords" content="<!-- KEYWORDS PLACEHOLDER -->">
+    <meta name="author" content="<!-- AUTHOR NAME PLACEHOLDER -->">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="<!-- CANONICAL URL PLACEHOLDER -->">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="<!-- OG:URL PLACEHOLDER -->">
+    <meta property="og:title" content="<!-- OG:TITLE PLACEHOLDER -->">
+    <meta property="og:description" content="<!-- OG:DESCRIPTION PLACEHOLDER -->">
+    <meta property="og:image" content="<!-- OG:IMAGE URL PLACEHOLDER -->">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<!-- TWITTER:URL PLACEHOLDER -->">
+    <meta property="twitter:title" content="<!-- TWITTER:TITLE PLACEHOLDER -->">
+    <meta property="twitter:description" content="<!-- TWITTER:DESCRIPTION PLACEHOLDER -->">
+    <meta property="twitter:image" content="<!-- TWITTER:IMAGE URL PLACEHOLDER -->">
+
+    <!-- Theme Script (Anti-FOUC) -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="logo">
+                <a href="../index.html" aria-label="Btoolsify - Home"><strong>Btoolsify</strong></a>
+            </div>
+        </div>
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema"><i class="fas fa-moon"></i></button>
+        </div>
+    </header>
+
+    <!-- Reading Mode Controls -->
+    <div class="reading-controls">
+        <button id="reading-mode-toggle" class="reading-mode-toggle" title="Modalità lettura (Fullscreen)">
+            <i class="fas fa-expand-alt"></i>
+        </button>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav id="side-bar" aria-label="Navigazione secondaria">
+            <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="../blog.html" class="active"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Hot</span></a>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <article class="blog-article-container">
+                <!-- Blog Header -->
+                <header class="blog-header">
+                    <span class="blog-category"><!-- CATEGORY PLACEHOLDER --></span>
+                    <h1 class="blog-title"><!-- H1 TITLE PLACEHOLDER --></h1>
+                    <div class="blog-meta">
+                        <div class="author-info">
+                            <div class="author-avatar"><!-- AUTHOR INITIALS PLACEHOLDER --></div>
+                            <span><strong><!-- AUTHOR NAME PLACEHOLDER --></strong></span>
+                        </div>
+                        <span><i class="far fa-clock"></i> <!-- READING TIME PLACEHOLDER --> min di lettura</span>
+                        <span><i class="far fa-calendar"></i> <!-- PUBLISH DATE PLACEHOLDER --></span>
+                    </div>
+                </header>
+
+                <!-- Hero Image -->
+                <img src="<!-- HERO IMAGE URL PLACEHOLDER -->" alt="<!-- IMAGE ALT TEXT PLACEHOLDER -->"
+                    class="blog-hero-image">
+
+                <!-- Blog Content -->
+                <div class="blog-content">
+                    <!-- ARTICLE CONTENT PLACEHOLDER -->
+                </div>
+
+                <!-- Blog Footer / CTA -->
+                <footer class="blog-footer">
+                    <div class="blog-cta-box">
+                        <h4><!-- CTA HEADING PLACEHOLDER --></h4>
+                        <p><!-- CTA DESCRIPTION PLACEHOLDER --></p>
+                        <a href="<!-- CTA LINK PLACEHOLDER -->" class="hero-btn">
+                            <!-- CTA BUTTON TEXT PLACEHOLDER --> <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </footer>
+            </article>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>
