@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Contrast Checker | Btoolsify</title>
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Verifica il contrasto dei colori secondo gli standard WCAG 2.1. Strumento gratuito per designer e sviluppatori per garantire l'accessibilità web.">
+    <meta name="keywords" content="contrast checker, accessibilità web, wcag 2.1, colori, design accessibile, a11y">
+    <meta name="author" content="Btoolsify">
+    <meta name="theme-color" content="#2563eb">
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .contrast-checker-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .tool-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .input-section {
+            background: var(--bg-surface);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-card);
+        }
+
+        .color-input-group {
+            margin-bottom: 25px;
+        }
+
+        .color-input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .inputs-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        .hex-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+
+        .color-picker {
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            overflow: hidden;
+            background: none;
+        }
+
+        .preview-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-preview {
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+            transition: var(--transition-smooth);
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .main-preview p {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .preview-normal {
+            font-size: 1rem;
+        }
+
+        .preview-large {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .results-section {
+            background: var(--bg-surface);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-card);
+        }
+
+        .ratio-display {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .ratio-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--brand-primary);
+            font-family: 'Rubik', sans-serif;
+        }
+
+        .wcag-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .wcag-item {
+            padding: 15px;
+            border-radius: 12px;
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: relative;
+        }
+
+        .wcag-item.pass {
+            border-left: 5px solid #22c55e;
+        }
+
+        .wcag-item.fail {
+            border-left: 5px solid #ef4444;
+        }
+
+        .wcag-label {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .wcag-status {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pass-icon {
+            color: #22c55e;
+        }
+
+        .fail-icon {
+            color: #ef4444;
+        }
+
+        .controls-extra {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .extra-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .extra-btn:hover {
+            background: var(--border-subtle);
+        }
+
+        .info-tooltip {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 20px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .tool-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .contrast-checker-container {
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="logo">
+                <a href="../index.html"><strong>Btoolsify</strong></a>
+            </div>
+        </div>
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema"><i class="fas fa-moon"></i></button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <nav id="side-bar">
+            <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        </nav>
+
+        <main id="main-content">
+            <div class="contrast-checker-container">
+                <div class="breadcrumb">
+                    <a href="../index.html">Home</a> / <a href="../tools.html">Strumenti</a> / Contrast Checker
+                </div>
+
+                <div id="hero" style="text-align: center; margin-bottom: 40px;">
+                    <h1>Color Contrast Checker</h1>
+                    <p>Ottimizza l'accessibilità del tuo design verificando il contrasto tra testo e sfondo.</p>
+                </div>
+
+                <div class="tool-layout">
+                    <!-- Inputs -->
+                    <div class="input-section">
+                        <div class="color-input-group">
+                            <label for="bg-color-picker"><i class="fas fa-fill-drip"></i> Colore Sfondo</label>
+                            <div class="inputs-wrapper">
+                                <input type="text" id="bg-color-hex" class="hex-input" value="#FFFFFF" maxlength="7">
+                                <input type="color" id="bg-color-picker" class="color-picker" value="#ffffff">
+                            </div>
+                        </div>
+
+                        <div class="color-input-group">
+                            <label for="text-color-picker"><i class="fas fa-font"></i> Colore Testo</label>
+                            <div class="inputs-wrapper">
+                                <input type="text" id="text-color-hex" class="hex-input" value="#4F46E5" maxlength="7">
+                                <input type="color" id="text-color-picker" class="color-picker" value="#4f46e5">
+                            </div>
+                        </div>
+
+                        <div class="controls-extra">
+                            <button class="extra-btn" id="swap-colors" title="Inverti colori">
+                                <i class="fas fa-exchange-alt"></i> Inverti
+                            </button>
+                            <button class="extra-btn" id="copy-summary" title="Copia HEX">
+                                <i class="fas fa-copy"></i> Copia HEX
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Results & Preview -->
+                    <div class="preview-section">
+                        <div class="results-section">
+                            <div class="ratio-display">
+                                <div class="wcag-label" style="margin-bottom: 5px;">Rapporto di Contrasto</div>
+                                <div class="ratio-value" id="contrast-ratio">21.0:1</div>
+                            </div>
+
+                            <div class="wcag-grid">
+                                <div class="wcag-item" id="normal-aa">
+                                    <span class="wcag-label">AA Normale</span>
+                                    <span class="wcag-status">---</span>
+                                </div>
+                                <div class="wcag-item" id="large-aa">
+                                    <span class="wcag-label">AA Grandi</span>
+                                    <span class="wcag-status">---</span>
+                                </div>
+                                <div class="wcag-item" id="normal-aaa">
+                                    <span class="wcag-label">AAA Normale</span>
+                                    <span class="wcag-status">---</span>
+                                </div>
+                                <div class="wcag-item" id="large-aaa">
+                                    <span class="wcag-label">AAA Grandi</span>
+                                    <span class="wcag-status">---</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="main-preview" id="preview-box">
+                            <p class="preview-large">Testo Grande (18pt+ / 24px+)</p>
+                            <p class="preview-normal">Questo è un esempio di come apparirà il testo normale. Assicurati
+                                che sia leggibile per tutti gli utenti, inclusi quelli con disabilità visive.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-tooltip">
+                    Le linee guida <strong>WCAG 2.1</strong> definiscono i requisiti di accessibilità.
+                    <strong>AA</strong> è lo standard minimo accettabile (4.5:1),
+                    mentre <strong>AAA</strong> è il livello di eccellenza (7:1).
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer id="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/contrast-checker.js"></script>
+</body>
+
+</html>
