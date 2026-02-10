@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge PDF: Unisci PDF Online Gratis | Btoolsify</title>
+
+    <!-- Theme Script (Anti-FOUC) -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Unisci più file PDF in un unico documento gratuitamente. Ordina le pagine come vuoi, tutto online e sicuro al 100%.">
+    <meta name="keywords" content="merge pdf, unire pdf online, combinare pdf, pdf merger, gratis">
+    <meta name="author" content="Btoolsify">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://btoolsify.netlify.app/tools/merge-pdf.html">
+    <meta property="og:title" content="Merge PDF - Btoolsify">
+    <meta property="og:description" content="Unisci i tuoi PDF in modo semplice, veloce e sicuro.">
+    <meta property="og:image" content="https://btoolsify.netlify.app/apple-touch-icon.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Merge PDF - Btoolsify">
+    <meta property="twitter:description" content="Strumento gratuito per unire file PDF.">
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="canonical" href="https://btoolsify.netlify.app/tools/merge-pdf.html">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- TOOL-SPECIFIC LIBRARIES -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+    <!-- TOOL-SPECIFIC STYLES -->
+    <style>
+        .tool-container {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow-card);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 3px dashed var(--border-subtle);
+            border-radius: 16px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--bg-body);
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--brand-primary);
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--brand-primary);
+            margin-bottom: 20px;
+        }
+
+        .upload-text h3 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .btn-upload {
+            background-color: var(--brand-primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-upload:hover {
+            background-color: var(--brand-hover);
+        }
+
+        /* File List Area */
+        .preview-area {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: grab;
+        }
+
+        .file-item:active {
+            cursor: grabbing;
+        }
+
+        .file-item.sortable-ghost {
+            opacity: 0.5;
+            background: var(--border-subtle);
+        }
+
+        .drag-handle {
+            color: var(--text-muted);
+            margin-right: 15px;
+            cursor: grab;
+        }
+
+        .file-icon {
+            font-size: 1.8rem;
+            color: #ef4444;
+            /* PDF color */
+            margin-right: 15px;
+        }
+
+        .file-info {
+            flex-grow: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .file-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .remove-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* Action Area */
+        .action-area {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn-merge {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--accent-color) 100%);
+            color: white;
+            padding: 18px 60px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .btn-merge:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-merge:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: var(--text-muted);
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .trust-badge {
+            margin-top: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(5, 150, 105, 0.1);
+            color: #059669;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="logo">
+                <a href="../index.html" aria-label="Btoolsify - Torna alla homepage"><strong>Btoolsify</strong></a>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="search" id="search-bar" placeholder="Cerca strumenti..." aria-label="Cerca strumenti"
+                autocomplete="off">
+            <button id="search-btn" aria-label="Cerca"><i class="fas fa-search"></i></button>
+            <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema"><i class="fas fa-moon"></i></button>
+            <button id="mobile-search-toggle" aria-label="Apri ricerca"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav id="side-bar" aria-label="Menu principale">
+            <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Hot</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-info-circle"></i><span>Chi Siamo</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-envelope"></i><span>Contatti</span></a>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../tools.html">Strumenti</a></li>
+                    <li aria-current="page">Merge PDF</li>
+                </ol>
+            </nav>
+
+            <div class="content-section">
+                <h1 class="section-title">Unisci PDF Online</h1>
+                <p class="section-intro" style="margin-bottom: 30px; color: var(--text-muted);">
+                    Combina più file PDF in un unico documento. <br>
+                    <strong>Caratteristiche:</strong> Drag & Drop, Riordina pagine, Privacy 100% (Client-side).
+                </p>
+
+                <div class="tool-container">
+
+                    <!-- 1. Upload Zone -->
+                    <div id="upload-zone" class="upload-zone">
+                        <i class="fas fa-file-pdf upload-icon"></i>
+                        <div class="upload-text">
+                            <h3>Trascina qui i tuoi PDF</h3>
+                            <p style="color:var(--text-muted)">o clicca per selezionare i file</p>
+                        </div>
+                        <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-plus"></i> Seleziona PDF
+                        </button>
+                        <input type="file" id="fileInput" class="hidden" accept="application/pdf" multiple>
+                    </div>
+
+                    <!-- 2. & 3. File List & Reorder -->
+                    <div id="preview-area" class="preview-area">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <h4 style="margin:0;"><i class="fas fa-list"></i> I tuoi file <span id="file-count"
+                                    style="color:var(--text-muted); font-weight:400; font-size:0.9em;">(0)</span></h4>
+                            <button class="btn-upload" style="margin:0; font-size:0.9rem; padding:8px 20px;"
+                                onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-plus"></i> Aggiungi
+                            </button>
+                        </div>
+
+                        <ul id="file-list" class="file-list">
+                            <!-- Files injected here -->
+                        </ul>
+
+                        <!-- 5. Action -->
+                        <div class="action-area">
+                            <button id="mergeBtn" class="btn-merge" onclick="mergePDFs()">
+                                <span>Unisci PDF</span>
+                                <div class="spinner" id="loadingSpinner"></div>
+                            </button>
+                            <br>
+                            <div class="trust-badge">
+                                <i class="fas fa-shield-alt"></i> I tuoi file rimangono sul tuo dispositivo. Nessun
+                                upload.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside id="right-sidebar">
+            <div class="sidebar-section">
+                <h4><i class="fas fa-fire"></i> Più Popolari</h4>
+                <ul class="trending-list">
+                    <li><a href="jpg-to-pdf.html">JPG to PDF</a></li>
+                    <li><a href="merge-pdf.html" class="active">Merge PDF</a></li>
+                    <li><a href="qr-generator.html">QR Generator</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section ad-placeholder">
+                <p>Annuncio</p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-tabs" aria-label="Navigazione mobile">
+        <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+        <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-search"></i><span>Cerca</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Trend</span></a>
+    </nav>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../data/search-index.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/merge-pdf.js"></script>
+</body>
+
+</html>

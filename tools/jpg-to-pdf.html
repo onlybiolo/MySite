@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JPG to PDF: Converti immagini in PDF Gratis Online | Btoolsify</title>
+
+    <!-- Theme Script (Anti-FOUC) -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Converti JPG in PDF online gratuitamente. Unisci più immagini in un unico documento PDF in pochi secondi. Sicuro, veloce e nessun upload sul server.">
+    <meta name="keywords"
+        content="jpg to pdf, converti immagini in pdf, unire jpg in pdf, pdf converter online, gratis">
+    <meta name="author" content="Btoolsify">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://btoolsify.netlify.app/tools/jpg-to-pdf.html">
+    <meta property="og:title" content="JPG to PDF Converter - Btoolsify">
+    <meta property="og:description" content="Converti le tue immagini in PDF in modo sicuro e veloce.">
+    <meta property="og:image" content="https://btoolsify.netlify.app/apple-touch-icon.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="JPG to PDF Converter - Btoolsify">
+    <meta property="twitter:description" content="Convertitore gratuito da immagini a PDF.">
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="canonical" href="https://btoolsify.netlify.app/tools/jpg-to-pdf.html">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- TOOL-SPECIFIC LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+    <!-- TOOL-SPECIFIC STYLES -->
+    <style>
+        .tool-container {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow-card);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 3px dashed var(--border-subtle);
+            border-radius: 16px;
+            padding: 50px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background-color: var(--bg-body);
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--brand-primary);
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3.5rem;
+            color: var(--brand-primary);
+            margin-bottom: 20px;
+        }
+
+        .upload-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .upload-text p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .btn-upload {
+            background-color: var(--brand-primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-upload:hover {
+            background-color: var(--brand-hover);
+        }
+
+        /* Preview Area */
+        .preview-area {
+            margin-top: 30px;
+            display: none;
+            /* Hidden strictly until files are added */
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--border-subtle);
+            cursor: grab;
+            background: var(--bg-body);
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .preview-item:active {
+            cursor: grabbing;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .preview-item .page-number {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #ef4444;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .preview-item .remove-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* Settings & Actions */
+        .settings-panel {
+            background: var(--bg-body);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 25px;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .settings-header h4 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .setting-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .setting-select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-family: inherit;
+        }
+
+        .action-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-convert {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--accent-color) 100%);
+            color: white;
+            padding: 16px 50px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-convert:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-convert:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: var(--text-muted);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Trust Badge */
+        .trust-badge {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .trust-badge i {
+            font-size: 1.1rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="logo">
+                <a href="../index.html" aria-label="Btoolsify - Torna alla homepage"><strong>Btoolsify</strong></a>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="search" id="search-bar" placeholder="Cerca strumenti..." aria-label="Cerca strumenti"
+                autocomplete="off">
+            <button id="search-btn" aria-label="Cerca"><i class="fas fa-search"></i></button>
+            <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema"><i class="fas fa-moon"></i></button>
+            <button id="mobile-search-toggle" aria-label="Apri ricerca"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav id="side-bar" aria-label="Menu principale">
+            <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Hot</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-info-circle"></i><span>Chi Siamo</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-envelope"></i><span>Contatti</span></a>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../tools.html">Strumenti</a></li>
+                    <li aria-current="page">JPG to PDF</li>
+                </ol>
+            </nav>
+
+            <div class="content-section">
+                <h1 class="section-title">Converti Immagini in PDF</h1>
+                <p class="section-intro" style="margin-bottom: 30px; color: var(--text-muted);">
+                    Unisci le tue foto in un unico documento PDF professionale. <br>
+                    <strong>Supporta:</strong> <span class="tag-cat">JPG</span> <span class="tag-cat">PNG</span> <span
+                        class="tag-cat">WEBP</span>
+                </p>
+
+                <div class="tool-container">
+
+                    <!-- 1. Upload Zone -->
+                    <div id="upload-zone" class="upload-zone">
+                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                        <div class="upload-text">
+                            <h3>Trascina qui le tue immagini</h3>
+                            <p>Accettiamo JPG, PNG e WEBP</p>
+                        </div>
+                        <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-plus"></i> Scegli File
+                        </button>
+                        <input type="file" id="fileInput" class="hidden" accept="image/jpeg, image/png, image/webp"
+                            multiple>
+                    </div>
+
+                    <!-- 2. Preview Area -->
+                    <div id="preview-area" class="preview-area">
+                        <div class="settings-header">
+                            <h4><i class="fas fa-images"></i> Le tue Immagini <span id="image-count"
+                                    style="font-size: 0.8em; color: var(--text-muted); margin-left:10px">(0)</span></h4>
+                            <button class="btn-upload" style="padding: 6px 15px; font-size: 0.9rem;"
+                                onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-plus"></i> Aggiungi
+                            </button>
+                        </div>
+
+                        <div id="preview-grid" class="preview-grid">
+                            <!-- Thumbnails injected here -->
+                        </div>
+
+                        <!-- 6. & 7. Settings -->
+                        <div class="settings-panel">
+                            <div class="settings-header">
+                                <h4><i class="fas fa-cog"></i> Impostazioni PDF</h4>
+                            </div>
+                            <div class="settings-grid">
+                                <div class="setting-group">
+                                    <label for="pageSize">Dimensione Pagina</label>
+                                    <select id="pageSize" class="setting-select">
+                                        <option value="a4" selected>A4</option>
+                                        <option value="letter">Lettera (USA)</option>
+                                        <option value="fit">Adatta all'immagine</option>
+                                    </select>
+                                </div>
+                                <div class="setting-group">
+                                    <label for="orientation">Orientamento</label>
+                                    <select id="orientation" class="setting-select">
+                                        <option value="p" selected>Verticale (Portrait)</option>
+                                        <option value="l">Orizzontale (Landscape)</option>
+                                    </select>
+                                </div>
+                                <div class="setting-group">
+                                    <label for="margin">Margini</label>
+                                    <select id="margin" class="setting-select">
+                                        <option value="none">Nessuno</option>
+                                        <option value="small" selected>Piccoli (10mm)</option>
+                                        <option value="big">Grandi (20mm)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. & 5. Action -->
+                        <div class="action-area">
+                            <button id="convertBtn" class="btn-convert" onclick="convertToPDF()">
+                                <span>Converti in PDF</span>
+                                <div class="spinner" id="loadingSpinner"></div>
+                            </button>
+
+                            <!-- 9. Trust -->
+                            <div class="trust-badge">
+                                <i class="fas fa-shield-alt"></i> I tuoi file vengono elaborati solo nel browser. Nessun
+                                upload sul server.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside id="right-sidebar">
+            <div class="sidebar-section">
+                <h4><i class="fas fa-fire"></i> Più Popolari</h4>
+                <ul class="trending-list">
+                    <li><a href="#" class="active">PDF to JPG</a></li>
+                    <li><a href="#">Word Counter</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section ad-placeholder">
+                <p>Annuncio</p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-tabs" aria-label="Navigazione mobile">
+        <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+        <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-search"></i><span>Cerca</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Trend</span></a>
+    </nav>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../data/search-index.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/jpg-to-pdf.js"></script>
+</body>
+
+</html>
