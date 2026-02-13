@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split PDF: Dividi PDF Online Gratis | Btoolsify</title>
+
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <meta name="description"
+        content="Dividi PDF online gratis: per pagina, intervallo, segnalibri, pagine pari/dispari. Download ZIP immediato. Privacy 100% — tutto nel browser.">
+    <meta name="keywords" content="split pdf, dividere pdf, separare pdf, estrarre pagine pdf, pdf splitter gratis">
+    <meta name="author" content="Btoolsify">
+    <meta name="theme-color" content="#2563eb">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://btoolsify.netlify.app/tools/split-pdf.html">
+    <meta property="og:title" content="Split PDF - Btoolsify">
+    <meta property="og:description" content="Dividi PDF online in modo semplice, veloce e sicuro.">
+    <meta property="og:image" content="https://btoolsify.netlify.app/apple-touch-icon.png">
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Split PDF - Btoolsify">
+    <meta property="twitter:description" content="Strumento gratuito per dividere file PDF.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="canonical" href="https://btoolsify.netlify.app/tools/split-pdf.html">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+        .tool-container {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow-card);
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .upload-zone {
+            border: 3px dashed var(--border-subtle);
+            border-radius: 16px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--bg-body);
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--brand-primary);
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--brand-primary);
+            margin-bottom: 20px;
+        }
+
+        .upload-text h3 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .btn-upload {
+            background-color: var(--brand-primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-upload:hover {
+            background-color: var(--brand-hover);
+        }
+
+        #tool-area {
+            display: none;
+        }
+
+        .file-info-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+        }
+
+        .file-info-bar i {
+            color: #ef4444;
+            font-size: 1.4rem;
+        }
+
+        #file-info {
+            flex: 1;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .btn-reset {
+            background: none;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-reset:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        #progress-wrap {
+            display: none;
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        #progress-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .progress-track {
+            background: var(--border-subtle);
+            border-radius: 50px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand-primary), var(--accent-color));
+            border-radius: 50px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .mode-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .mode-tab {
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 2px solid var(--border-subtle);
+            background: var(--bg-body);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .mode-tab:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .mode-tab.active {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .mode-panel {
+            display: none;
+            padding: 20px;
+            background: var(--bg-body);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .mode-panel.active {
+            display: block;
+        }
+
+        .mode-panel label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .mode-panel input[type="text"],
+        .mode-panel input[type="number"] {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        .mode-panel small {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            display: block;
+            margin-top: 6px;
+        }
+
+        .mode-hint {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        #bookmark-list {
+            width: 100%;
+            min-height: 120px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+
+        #bookmark-hint {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .preview-section {
+            margin-bottom: 24px;
+        }
+
+        .preview-section h4 {
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .btn-sm:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        #page-previews {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .page-thumb {
+            position: relative;
+            cursor: pointer;
+            border-radius: 8px;
+            border: 3px solid var(--border-subtle);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .page-thumb:hover {
+            border-color: var(--brand-primary);
+            transform: scale(1.03);
+        }
+
+        .page-thumb.selected {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+        }
+
+        .page-thumb canvas {
+            display: block;
+        }
+
+        .page-num {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.65);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 7px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .thumb-note {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            align-self: center;
+        }
+
+        /* ── Opzioni ── */
+        .options-section {
+            background: var(--bg-body);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .options-section h4 {
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        .option-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .option-row>label {
+            font-weight: 600;
+            color: var(--text-main);
+            min-width: 160px;
+            padding-top: 9px;
+        }
+
+        .option-input-wrap {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .option-input-wrap input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+
+        #naming-preview {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* Bottone variabili */
+        .variables-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: rgba(79, 70, 229, 0.08);
+            border: 1px dashed var(--brand-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            color: var(--brand-primary);
+            font-weight: 600;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .variables-btn:hover {
+            background: rgba(79, 70, 229, 0.16);
+            transform: translateY(-1px);
+        }
+
+        .variables-btn i {
+            font-size: 0.78rem;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 4px;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Presets */
+        .presets-section {
+            margin-bottom: 24px;
+        }
+
+        .presets-section h4 {
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        #presets-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .preset-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+
+        .preset-item span {
+            cursor: pointer;
+            color: var(--brand-primary);
+            font-weight: 600;
+        }
+
+        .preset-item button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 2px 4px;
+            transition: color 0.2s;
+        }
+
+        .preset-item button:hover {
+            color: #ef4444;
+        }
+
+        /* Action */
+        .action-area {
+            text-align: center;
+        }
+
+        .btn-split {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--accent-color) 100%);
+            color: white;
+            padding: 18px 60px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .btn-split:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-split:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: var(--text-muted);
+        }
+
+        .trust-badge {
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(5, 150, 105, 0.1);
+            color: #059669;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ── Modal variabili ── */
+        .vars-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 9998;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vars-overlay.open {
+            display: flex;
+        }
+
+        .vars-modal {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            padding: 28px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .vars-modal h3 {
+            margin: 0 0 4px;
+            color: var(--text-main);
+            font-size: 1.2rem;
+        }
+
+        .vars-modal .modal-sub {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 20px;
+        }
+
+        .var-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 10px;
+            padding: 12px;
+            background: var(--bg-body);
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .var-chip {
+            background: var(--brand-primary);
+            color: white;
+            padding: 5px 11px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: monospace;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            flex-shrink: 0;
+        }
+
+        .var-chip:hover {
+            opacity: 0.8;
+        }
+
+        .var-chip:active {
+            opacity: 0.6;
+        }
+
+        .var-info {
+            font-size: 0.88rem;
+            color: var(--text-main);
+        }
+
+        .var-info small {
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+
+        .var-example {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: rgba(79, 70, 229, 0.07);
+            border-radius: 10px;
+            font-size: 0.88rem;
+            color: var(--text-main);
+        }
+
+        .var-example strong {
+            color: var(--brand-primary);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--text-main);
+        }
+
+        .copied-toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #059669;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+
+        .copied-toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu"><span></span><span></span><span></span></button>
+            <div class="logo">
+                <a href="../index.html" aria-label="Btoolsify - Torna alla homepage"><strong>Btoolsify</strong></a>
+            </div>
+        </div>
+        <div class="search-container">
+            <input type="search" id="search-bar" placeholder="Cerca strumenti..." aria-label="Cerca strumenti"
+                autocomplete="off">
+            <button id="search-btn" aria-label="Cerca"><i class="fas fa-search"></i></button>
+            <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema"><i class="fas fa-moon"></i></button>
+            <button id="mobile-search-toggle" aria-label="Apri ricerca"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <nav id="side-bar" aria-label="Menu principale">
+            <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Hot</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-info-circle"></i><span>Chi Siamo</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-envelope"></i><span>Contatti</span></a>
+        </nav>
+
+        <main id="main-content">
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../tools.html">Strumenti</a></li>
+                    <li aria-current="page">Split PDF</li>
+                </ol>
+            </nav>
+
+            <div class="content-section">
+                <h1 class="section-title">Dividi PDF Online</h1>
+                <p class="section-intro" style="margin-bottom:30px; color:var(--text-muted);">
+                    Estrai pagine, dividi per intervalli, segnalibri o pagine pari/dispari.<br>
+                    <strong>Privacy 100%</strong> — tutto elaborato nel browser, nessun upload.
+                </p>
+
+                <div class="tool-container">
+
+                    <!-- Upload Zone -->
+                    <div id="upload-zone" class="upload-zone">
+                        <i class="fas fa-file-pdf upload-icon"></i>
+                        <div class="upload-text">
+                            <h3>Trascina qui il tuo PDF</h3>
+                            <p style="color:var(--text-muted)">o clicca per selezionare il file</p>
+                        </div>
+                        <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-plus"></i> Seleziona PDF
+                        </button>
+                        <input type="file" id="fileInput" class="hidden" accept="application/pdf">
+                    </div>
+
+                    <!-- Tool Area -->
+                    <div id="tool-area">
+
+                        <div class="file-info-bar">
+                            <i class="fas fa-file-pdf"></i>
+                            <span id="file-info">—</span>
+                            <button class="btn-reset" onclick="resetTool()"><i class="fas fa-times"></i> Cambia
+                                file</button>
+                        </div>
+
+                        <div id="progress-wrap">
+                            <div id="progress-label">Caricamento...</div>
+                            <div class="progress-track">
+                                <div id="progress-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="mode-tabs">
+                            <button class="mode-tab active" data-mode="single"><i class="fas fa-copy"></i> Pagine
+                                singole</button>
+                            <button class="mode-tab" data-mode="range"><i class="fas fa-cut"></i> Intervallo</button>
+                            <button class="mode-tab" data-mode="every"><i class="fas fa-layer-group"></i> Ogni X
+                                pagine</button>
+                            <button class="mode-tab" data-mode="odd"><i class="fas fa-sort-numeric-up"></i> Pagine
+                                dispari</button>
+                            <button class="mode-tab" data-mode="even"><i class="fas fa-sort-numeric-down"></i> Pagine
+                                pari</button>
+                            <button class="mode-tab" data-mode="bookmark"><i class="fas fa-bookmark"></i>
+                                Segnalibri</button>
+                            <button class="mode-tab" data-mode="selected"><i class="fas fa-mouse-pointer"></i> Selezione
+                                manuale</button>
+                        </div>
+
+                        <div id="panel-single" class="mode-panel active">
+                            <p class="mode-hint"><i class="fas fa-info-circle"></i> Ogni pagina del PDF verrà salvata
+                                come file separato.</p>
+                        </div>
+                        <div id="panel-range" class="mode-panel">
+                            <label for="range-input">Pagine da estrarre</label>
+                            <input type="text" id="range-input" placeholder="Es: 1-5, 8, 10-12">
+                            <small>Usa virgole per separare e trattino per gli intervalli. Es:
+                                <code>1-3, 7, 10-15</code></small>
+                        </div>
+                        <div id="panel-every" class="mode-panel">
+                            <label for="every-input">Dividi ogni quante pagine</label>
+                            <input type="number" id="every-input" value="5" min="1">
+                            <small>Es: 5 → crea file da 5 pagine ciascuno</small>
+                        </div>
+                        <div id="panel-odd" class="mode-panel">
+                            <p class="mode-hint"><i class="fas fa-info-circle"></i> Verranno estratte tutte le pagine
+                                con numero dispari (1, 3, 5…).</p>
+                        </div>
+                        <div id="panel-even" class="mode-panel">
+                            <p class="mode-hint"><i class="fas fa-info-circle"></i> Verranno estratte tutte le pagine
+                                con numero pari (2, 4, 6…).</p>
+                        </div>
+                        <div id="panel-bookmark" class="mode-panel">
+                            <p id="bookmark-hint">Carica un PDF con segnalibri per usare questa modalità.</p>
+                            <select id="bookmark-list" multiple></select>
+                            <small>Tieni premuto <kbd>Ctrl</kbd> per selezionare più segnalibri.</small>
+                        </div>
+                        <div id="panel-selected" class="mode-panel">
+                            <div class="preview-controls">
+                                <button class="btn-sm" onclick="selectAll()"><i class="fas fa-check-square"></i>
+                                    Seleziona tutto</button>
+                                <button class="btn-sm" onclick="selectNone()"><i class="fas fa-square"></i>
+                                    Deseleziona</button>
+                            </div>
+                            <p class="mode-hint" style="margin-bottom:10px;">Clicca sulle pagine che vuoi estrarre.</p>
+                        </div>
+
+                        <div class="preview-section">
+                            <h4><i class="fas fa-th"></i> Anteprima pagine</h4>
+                            <div id="page-previews"></div>
+                        </div>
+
+                        <!-- Opzioni -->
+                        <div class="options-section">
+                            <h4><i class="fas fa-sliders-h"></i> Opzioni</h4>
+
+                            <div class="option-row">
+                                <label for="naming-template">Nome file output</label>
+                                <div class="option-input-wrap">
+                                    <input type="text" id="naming-template" value="{name}_{index}" tabindex="-1">
+                                    <span id="naming-preview">Es: documento_01.pdf</span>
+                                    <button class="variables-btn" onclick="openVarsModal()" type="button">
+                                        <i class="fas fa-code"></i> Come usare le variabili
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-row">
+                                <input type="checkbox" id="keep-bookmarks" checked>
+                                <label for="keep-bookmarks">Mantieni segnalibri originali</label>
+                            </div>
+                        </div>
+
+                        <!-- Presets -->
+                        <div class="presets-section">
+                            <h4><i class="fas fa-star"></i> Preset
+                                <button class="btn-sm" onclick="savePreset()" style="margin-left:10px;">
+                                    <i class="fas fa-plus"></i> Salva preset attuale
+                                </button>
+                            </h4>
+                            <div id="presets-list"></div>
+                        </div>
+
+                        <!-- Action -->
+                        <div class="action-area">
+                            <button id="split-btn" class="btn-split" onclick="startSplit()">
+                                <i class="fas fa-cut"></i> Dividi PDF
+                            </button>
+                            <br>
+                            <div class="trust-badge">
+                                <i class="fas fa-shield-alt"></i> I tuoi file rimangono sul tuo dispositivo. Nessun
+                                upload.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside id="right-sidebar">
+            <div class="sidebar-section">
+                <h4><i class="fas fa-fire"></i> Più Popolari</h4>
+                <ul class="trending-list">
+                    <li><a href="merge-pdf.html">Merge PDF</a></li>
+                    <li><a href="jpg-to-pdf.html">JPG to PDF</a></li>
+                    <li><a href="qr-generator.html">QR Generator</a></li>
+                    <li><a href="split-pdf.html" class="active">Split PDF</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section ad-placeholder">
+                <p>Annuncio</p>
+            </div>
+        </aside>
+    </div>
+
+    <nav class="mobile-tabs" aria-label="Navigazione mobile">
+        <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+        <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-search"></i><span>Cerca</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Trend</span></a>
+    </nav>
+
+    <footer id="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <!-- Modal variabili -->
+    <div class="vars-overlay" id="varsOverlay" onclick="closeVarsModalOutside(event)">
+        <div class="vars-modal" role="dialog" aria-modal="true" aria-labelledby="varsModalTitle">
+            <button class="modal-close" onclick="closeVarsModal()" aria-label="Chiudi">&times;</button>
+            <h3 id="varsModalTitle"><i class="fas fa-code" style="color:var(--brand-primary)"></i> Variabili per il nome
+                file</h3>
+            <p class="modal-sub">Scrivi il template nel campo "Nome file output" usando queste variabili. Clicca su una
+                variabile per copiarla.</p>
+
+            <div class="var-row">
+                <span class="var-chip" onclick="copyVar('{name}')">{name}</span>
+                <div class="var-info">
+                    Nome del file originale (senza .pdf)
+                    <small>Es: se il file si chiama <em>contratto.pdf</em> → diventa <em>contratto</em></small>
+                </div>
+            </div>
+            <div class="var-row">
+                <span class="var-chip" onclick="copyVar('{index}')">{index}</span>
+                <div class="var-info">
+                    Numero progressivo del file generato
+                    <small>Es: 01, 02, 03… (si adatta automaticamente al totale)</small>
+                </div>
+            </div>
+            <div class="var-row">
+                <span class="var-chip" onclick="copyVar('{range}')">{range}</span>
+                <div class="var-info">
+                    Pagine contenute in quel file
+                    <small>Es: <em>p1-5</em> se contiene le pagine da 1 a 5, <em>p3</em> se è una pagina sola</small>
+                </div>
+            </div>
+            <div class="var-row">
+                <span class="var-chip" onclick="copyVar('{date}')">{date}</span>
+                <div class="var-info">
+                    Data di oggi
+                    <small>Es: 2026-02-13</small>
+                </div>
+            </div>
+
+            <div class="var-example">
+                <strong>Esempio:</strong> con il template <code>{name}_{range}_{date}</code> e un file chiamato
+                <em>contratto.pdf</em> ottieni:<br>
+                <code>contratto_p1-5_2026-02-13.pdf</code>, <code>contratto_p6-10_2026-02-13.pdf</code>…
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast copia -->
+    <div class="copied-toast" id="copiedToast">Variabile copiata!</div>
+
+    <script src="../data/search-index.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/split-pdf.js"></script>
+    <script>
+        function openVarsModal() {
+            document.getElementById('varsOverlay').classList.add('open');
+        }
+        function closeVarsModal() {
+            document.getElementById('varsOverlay').classList.remove('open');
+        }
+        function closeVarsModalOutside(e) {
+            if (e.target === document.getElementById('varsOverlay')) closeVarsModal();
+        }
+        function copyVar(v) {
+            const input = document.getElementById('naming-template');
+            const start = input.selectionStart ?? input.value.length;
+            const end = input.selectionEnd ?? input.value.length;
+            input.value = input.value.slice(0, start) + v + input.value.slice(end);
+            input.focus();
+            input.setSelectionRange(start + v.length, start + v.length);
+            if (typeof updateNamingPreview === 'function') updateNamingPreview();
+            const t = document.getElementById('copiedToast');
+            t.textContent = v + ' inserita!';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1800);
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeVarsModal(); });
+    </script>
+</body>
+
+</html>
