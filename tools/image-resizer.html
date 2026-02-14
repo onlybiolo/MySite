@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer: Ridimensiona Immagini Online Gratis | Btoolsify</title>
+
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <meta name="description"
+        content="Ridimensiona immagini JPG, PNG e WEBP online gratis. Preview live, qualità alta, preset social e wallpaper. Privacy 100% — tutto nel browser.">
+    <meta name="keywords"
+        content="ridimensiona immagini, image resizer, resize jpg png webp, compressore immagini, ottimizza immagini web">
+    <meta name="author" content="Btoolsify">
+    <meta name="theme-color" content="#2563eb">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://btoolsify.netlify.app/tools/image-resizer.html">
+    <meta property="og:title" content="Image Resizer - Btoolsify">
+    <meta property="og:description" content="Ridimensiona immagini online con preview live e qualità alta.">
+    <meta property="og:image" content="https://btoolsify.netlify.app/apple-touch-icon.png">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Image Resizer - Btoolsify">
+    <meta property="twitter:description" content="Ridimensiona JPG, PNG, WEBP online gratis.">
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="canonical" href="https://btoolsify.netlify.app/tools/image-resizer.html">
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+        /* ── Upload Zone ── */
+        .upload-zone {
+            border: 3px dashed var(--border-subtle);
+            border-radius: 16px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--bg-body);
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--brand-primary);
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--brand-primary);
+            margin-bottom: 16px;
+        }
+
+        .upload-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .upload-text p {
+            color: var(--text-muted);
+        }
+
+        .btn-upload {
+            background: var(--brand-primary);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-upload:hover {
+            background: var(--brand-hover);
+        }
+
+        .format-badges {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .format-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+        }
+
+        /* ── Editor ── */
+        #editor-area {
+            display: none;
+        }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Controls ── */
+        .controls-panel {
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .ctrl-section {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .ctrl-section:last-child {
+            border-bottom: none;
+        }
+
+        .ctrl-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        /* File info bar */
+        .file-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--bg-body);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .file-bar i {
+            color: var(--brand-primary);
+        }
+
+        .file-bar-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-bar-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-bar-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .btn-change {
+            background: none;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .btn-change:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        /* Mode tabs */
+        .mode-tabs {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .mode-tab {
+            flex: 1;
+            min-width: 60px;
+            padding: 7px 4px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .mode-tab:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .mode-tab.active {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        /* Inputs */
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .input-row label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 24px;
+        }
+
+        .input-row input[type="number"] {
+            flex: 1;
+            padding: 7px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .lock-btn {
+            background: none;
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 6px 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .lock-btn.locked {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        /* Slider */
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider-row input[type="range"] {
+            flex: 1;
+        }
+
+        .slider-val {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--brand-primary);
+            min-width: 36px;
+            text-align: right;
+        }
+
+        /* Preset chips */
+        .preset-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .preset-chip {
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .preset-chip:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            background: rgba(79, 70, 229, 0.06);
+        }
+
+        /* Format select */
+        .format-select {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Toggle */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .toggle-row label {
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        .toggle {
+            position: relative;
+            width: 38px;
+            height: 20px;
+            background: var(--border-subtle);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .toggle.on {
+            background: var(--brand-primary);
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            transition: left 0.2s;
+        }
+
+        .toggle.on::after {
+            left: 21px;
+        }
+
+        /* Download button */
+        .btn-download {
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, var(--brand-primary), var(--accent-color));
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35);
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-download:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .btn-download:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--text-muted);
+            box-shadow: none;
+        }
+
+        /* ── Preview panel ── */
+        .preview-panel {
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .preview-topbar-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .preview-stats {
+            display: flex;
+            gap: 16px;
+        }
+
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .stat-pill strong {
+            color: var(--text-main);
+        }
+
+        .stat-pill.green strong {
+            color: #059669;
+        }
+
+        .stat-pill.red strong {
+            color: #ef4444;
+        }
+
+        .preview-canvas-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 380px;
+            padding: 20px;
+            background: repeating-conic-gradient(var(--border-subtle) 0% 25%, transparent 0% 50%) 0 0 / 20px 20px;
+        }
+
+        #preview-canvas {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 6px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+        }
+
+        .preview-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+        }
+
+        .preview-placeholder i {
+            font-size: 3rem;
+            opacity: 0.3;
+        }
+
+        /* Progress */
+        #progress-wrap {
+            display: none;
+            padding: 14px 16px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        #progress-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .progress-track {
+            background: var(--border-subtle);
+            border-radius: 50px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand-primary), var(--accent-color));
+            border-radius: 50px;
+            transition: width 0.2s;
+            width: 0%;
+        }
+
+        /* Batch list */
+        .batch-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .batch-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+
+        .batch-thumb {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        .batch-name {
+            flex: 1;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .batch-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .batch-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .batch-remove:hover {
+            color: #ef4444;
+        }
+
+        .batch-status {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .batch-status.done {
+            color: #059669;
+        }
+
+        .batch-status.processing {
+            color: var(--brand-primary);
+        }
+
+        .trust-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(5, 150, 105, 0.1);
+            color: #059669;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            margin-top: 10px;
+            width: 100%;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Target size */
+        .target-size-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .target-size-row input[type="number"] {
+            flex: 1;
+            padding: 7px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .target-size-row select {
+            padding: 7px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu"><span></span><span></span><span></span></button>
+            <div class="logo">
+                <a href="../index.html" aria-label="Btoolsify - Torna alla homepage"><strong>Btoolsify</strong></a>
+            </div>
+        </div>
+        <div class="search-container">
+            <input type="search" id="search-bar" placeholder="Cerca strumenti..." aria-label="Cerca strumenti"
+                autocomplete="off">
+            <button id="search-btn" aria-label="Cerca"><i class="fas fa-search"></i></button>
+            <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema"><i class="fas fa-moon"></i></button>
+            <button id="mobile-search-toggle" aria-label="Apri ricerca"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <nav id="side-bar" aria-label="Menu principale">
+            <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Hot</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-info-circle"></i><span>Chi Siamo</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-envelope"></i><span>Contatti</span></a>
+        </nav>
+
+        <main id="main-content">
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../tools.html">Strumenti</a></li>
+                    <li aria-current="page">Image Resizer</li>
+                </ol>
+            </nav>
+
+            <div class="content-section">
+                <h1 class="section-title">Image Resizer</h1>
+                <p class="section-intro" style="margin-bottom:24px; color:var(--text-muted);">
+                    Ridimensiona JPG, PNG e WEBP con preview live e qualità alta.<br>
+                    <strong>Privacy 100%</strong> — tutto elaborato nel browser, nessun upload.
+                </p>
+
+                <!-- Upload Zone -->
+                <div id="upload-zone" class="upload-zone" style="max-width:960px; margin:0 auto;">
+                    <i class="fas fa-image upload-icon"></i>
+                    <div class="upload-text">
+                        <h3>Trascina qui la tua immagine</h3>
+                        <p>o clicca per selezionare • JPG, PNG, WEBP</p>
+                    </div>
+                    <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-plus"></i> Seleziona immagine
+                    </button>
+                    <input type="file" id="fileInput" class="hidden" accept="image/jpeg,image/png,image/webp" multiple>
+                    <div class="format-badges">
+                        <span class="format-badge">JPG</span>
+                        <span class="format-badge">PNG</span>
+                        <span class="format-badge">WEBP</span>
+                        <span class="format-badge">Batch</span>
+                        <span class="format-badge">Privacy 100%</span>
+                    </div>
+                </div>
+
+                <!-- Editor Area -->
+                <div id="editor-area" style="max-width:1100px; margin:0 auto;">
+
+                    <!-- File bar -->
+                    <div class="file-bar" style="border-radius:12px; margin-bottom:16px;">
+                        <i class="fas fa-image"></i>
+                        <div class="file-bar-info">
+                            <div class="file-bar-name" id="current-filename">—</div>
+                            <div class="file-bar-meta" id="current-meta">—</div>
+                        </div>
+                        <button class="btn-change" onclick="resetTool()"><i class="fas fa-times"></i> Cambia</button>
+                    </div>
+
+                    <div class="editor-grid">
+
+                        <!-- ── LEFT: Controls ── -->
+                        <div class="controls-panel">
+
+                            <!-- Mode -->
+                            <div class="ctrl-section">
+                                <div class="ctrl-title">Modalità resize</div>
+                                <div class="mode-tabs">
+                                    <button class="mode-tab active" data-mode="wh">W × H</button>
+                                    <button class="mode-tab" data-mode="width">Larghezza</button>
+                                    <button class="mode-tab" data-mode="height">Altezza</button>
+                                    <button class="mode-tab" data-mode="percent">%</button>
+                                    <button class="mode-tab" data-mode="longest">Lato lungo</button>
+                                </div>
+                            </div>
+
+                            <!-- Dimensions -->
+                            <div class="ctrl-section" id="dim-section">
+                                <div class="ctrl-title">Dimensioni</div>
+                                <div id="dim-wh">
+                                    <div class="input-row">
+                                        <label>W</label>
+                                        <input type="number" id="input-w" min="1" max="20000" placeholder="larghezza">
+                                        <button class="lock-btn locked" id="lock-btn" onclick="toggleLock()"
+                                            title="Mantieni proporzioni">
+                                            <i class="fas fa-lock"></i>
+                                        </button>
+                                    </div>
+                                    <div class="input-row">
+                                        <label>H</label>
+                                        <input type="number" id="input-h" min="1" max="20000" placeholder="altezza">
+                                    </div>
+                                </div>
+                                <div id="dim-width" class="hidden">
+                                    <div class="input-row">
+                                        <label>W</label>
+                                        <input type="number" id="input-w2" min="1" max="20000"
+                                            placeholder="larghezza px">
+                                    </div>
+                                </div>
+                                <div id="dim-height" class="hidden">
+                                    <div class="input-row">
+                                        <label>H</label>
+                                        <input type="number" id="input-h2" min="1" max="20000" placeholder="altezza px">
+                                    </div>
+                                </div>
+                                <div id="dim-percent" class="hidden">
+                                    <div class="slider-row">
+                                        <input type="range" id="percent-slider" min="1" max="200" value="50"
+                                            oninput="onPercentSlide(this.value)">
+                                        <span class="slider-val" id="percent-val">50%</span>
+                                    </div>
+                                    <div class="preset-chips" style="margin-top:8px;">
+                                        <span class="preset-chip" onclick="setPercent(25)">25%</span>
+                                        <span class="preset-chip" onclick="setPercent(50)">50%</span>
+                                        <span class="preset-chip" onclick="setPercent(75)">75%</span>
+                                        <span class="preset-chip" onclick="setPercent(100)">100%</span>
+                                        <span class="preset-chip" onclick="setPercent(150)">150%</span>
+                                        <span class="preset-chip" onclick="setPercent(200)">200%</span>
+                                    </div>
+                                </div>
+                                <div id="dim-longest" class="hidden">
+                                    <div class="input-row">
+                                        <label><i class="fas fa-arrows-alt-h"></i></label>
+                                        <input type="number" id="input-longest" min="1" max="20000"
+                                            placeholder="lato lungo px">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Presets -->
+                            <div class="ctrl-section">
+                                <div class="ctrl-title">Preset</div>
+                                <div class="preset-chips">
+                                    <span class="preset-chip" onclick="applyPreset(1080,1080)">IG Post</span>
+                                    <span class="preset-chip" onclick="applyPreset(1080,1920)">IG Story</span>
+                                    <span class="preset-chip" onclick="applyPreset(1200,630)">X / OG</span>
+                                    <span class="preset-chip" onclick="applyPreset(1200,627)">LinkedIn</span>
+                                    <span class="preset-chip" onclick="applyPreset(1920,1080)">1080p</span>
+                                    <span class="preset-chip" onclick="applyPreset(2560,1440)">1440p</span>
+                                    <span class="preset-chip" onclick="applyPreset(3840,2160)">4K</span>
+                                    <span class="preset-chip" onclick="applyPreset(800,600)">800×600</span>
+                                </div>
+                            </div>
+
+                            <!-- Target size -->
+                            <div class="ctrl-section">
+                                <div class="ctrl-title">Peso target (opzionale)</div>
+                                <div class="target-size-row">
+                                    <input type="number" id="target-size" min="1" placeholder="es: 500">
+                                    <select id="target-unit">
+                                        <option value="kb">KB</option>
+                                        <option value="mb">MB</option>
+                                    </select>
+                                </div>
+                                <small
+                                    style="color:var(--text-muted); font-size:0.78rem; margin-top:5px; display:block;">
+                                    Se impostato, riduce automaticamente qualità e dimensioni per rientrare nel peso.
+                                </small>
+                            </div>
+
+                            <!-- Quality -->
+                            <div class="ctrl-section">
+                                <div class="ctrl-title">Qualità output</div>
+                                <div class="slider-row">
+                                    <input type="range" id="quality-slider" min="1" max="100" value="85"
+                                        oninput="onQualitySlide(this.value)">
+                                    <span class="slider-val" id="quality-val">85</span>
+                                </div>
+                                <small
+                                    style="color:var(--text-muted); font-size:0.78rem; margin-top:4px; display:block;">
+                                    Non usato per PNG (lossless).
+                                </small>
+                            </div>
+
+                            <!-- Format -->
+                            <div class="ctrl-section">
+                                <div class="ctrl-title">Formato output</div>
+                                <select class="format-select" id="output-format" onchange="onFormatChange()">
+                                    <option value="original">Mantieni originale</option>
+                                    <option value="image/jpeg">JPG</option>
+                                    <option value="image/png">PNG</option>
+                                    <option value="image/webp">WEBP</option>
+                                </select>
+                            </div>
+
+                            <!-- Options -->
+                            <div class="ctrl-section">
+                                <div class="ctrl-title">Opzioni</div>
+                                <div class="toggle-row">
+                                    <label>Mantieni proporzioni</label>
+                                    <div class="toggle on" id="toggle-ratio" onclick="toggleOpt('ratio')"></div>
+                                </div>
+                                <div class="toggle-row">
+                                    <label>Ottimizza per Web</label>
+                                    <div class="toggle" id="toggle-web" onclick="toggleOpt('web')"></div>
+                                </div>
+                                <div class="toggle-row">
+                                    <label>Sfondo bianco (trasparenza)</label>
+                                    <div class="toggle" id="toggle-bg" onclick="toggleOpt('bg')"></div>
+                                </div>
+                            </div>
+
+                            <!-- Batch list -->
+                            <div class="ctrl-section" id="batch-section" style="display:none;">
+                                <div class="ctrl-title"
+                                    style="display:flex;align-items:center;justify-content:space-between;">
+                                    <span>Batch (<span id="batch-count">0</span> file)</span>
+                                    <button class="btn-change" onclick="document.getElementById('fileInput').click()">+
+                                        Aggiungi</button>
+                                </div>
+                                <div class="batch-list" id="batch-list"></div>
+                            </div>
+
+                            <!-- Download -->
+                            <div class="ctrl-section">
+                                <button class="btn-download" id="download-btn" onclick="downloadAll()">
+                                    <i class="fas fa-download"></i> <span id="download-label">Scarica</span>
+                                </button>
+                                <div class="trust-badge">
+                                    <i class="fas fa-shield-alt"></i> Nessun upload — tutto nel browser
+                                </div>
+                            </div>
+
+                        </div><!-- /controls-panel -->
+
+                        <!-- ── RIGHT: Preview ── -->
+                        <div class="preview-panel">
+                            <div class="preview-topbar">
+                                <span class="preview-topbar-title"><i class="fas fa-eye"></i> Preview live</span>
+                                <div class="preview-stats">
+                                    <div class="stat-pill">
+                                        <i class="fas fa-expand-arrows-alt"></i>
+                                        <strong id="stat-size">—</strong>
+                                    </div>
+                                    <div class="stat-pill" id="stat-weight-pill">
+                                        <i class="fas fa-weight"></i>
+                                        <strong id="stat-weight">—</strong>
+                                    </div>
+                                    <div class="stat-pill green" id="stat-saving-pill" style="display:none;">
+                                        <i class="fas fa-arrow-down"></i>
+                                        <strong id="stat-saving">—</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="preview-canvas-wrap">
+                                <canvas id="preview-canvas" style="display:none;"></canvas>
+                                <div class="preview-placeholder" id="preview-placeholder">
+                                    <i class="fas fa-image"></i>
+                                    <span>La preview apparirà qui</span>
+                                </div>
+                            </div>
+
+                            <div id="progress-wrap">
+                                <div id="progress-label">Elaborazione...</div>
+                                <div class="progress-track">
+                                    <div id="progress-bar"></div>
+                                </div>
+                            </div>
+                        </div><!-- /preview-panel -->
+
+                    </div><!-- /editor-grid -->
+                </div><!-- /editor-area -->
+
+            </div>
+        </main>
+
+        <aside id="right-sidebar">
+            <div class="sidebar-section">
+                <h4><i class="fas fa-fire"></i> Più Popolari</h4>
+                <ul class="trending-list">
+                    <li><a href="jpg-to-pdf.html">JPG to PDF</a></li>
+                    <li><a href="merge-pdf.html">Merge PDF</a></li>
+                    <li><a href="split-pdf.html">Split PDF</a></li>
+                    <li><a href="qr-generator.html">QR Generator</a></li>
+                    <li><a href="image-resizer.html" class="active">Image Resizer</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section ad-placeholder">
+                <p>Annuncio</p>
+            </div>
+        </aside>
+    </div>
+
+    <nav class="mobile-tabs" aria-label="Navigazione mobile">
+        <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+        <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-search"></i><span>Cerca</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Trend</span></a>
+    </nav>
+
+    <footer id="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <script src="../data/search-index.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/image-resizer.js"></script>
+</body>
+
+</html>

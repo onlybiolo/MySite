@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprimi Immagini Online Gratis | Btoolsify</title>
+
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <meta name="description"
+        content="Comprimi immagini JPG, PNG e WEBP online gratis. Preview comparativa live, batch processing, download ZIP. Privacy 100% — tutto nel browser.">
+    <meta name="keywords"
+        content="comprimi immagini, compressore immagini, compress jpg png webp, ridurre peso immagini, ottimizza immagini web">
+    <meta name="author" content="Btoolsify">
+    <meta name="theme-color" content="#2563eb">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://btoolsify.netlify.app/tools/image-compressor.html">
+    <meta property="og:title" content="Image Compressor - Btoolsify">
+    <meta property="og:description" content="Comprimi immagini online con preview comparativa live.">
+    <meta property="og:image" content="https://btoolsify.netlify.app/apple-touch-icon.png">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Image Compressor - Btoolsify">
+    <meta property="twitter:description" content="Comprimi JPG, PNG, WEBP online gratis.">
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="canonical" href="https://btoolsify.netlify.app/tools/image-compressor.html">
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+        /* ── Upload ── */
+        .upload-zone {
+            border: 3px dashed var(--border-subtle);
+            border-radius: 16px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--bg-body);
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--brand-primary);
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--brand-primary);
+            margin-bottom: 16px;
+        }
+
+        .upload-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .upload-text p {
+            color: var(--text-muted);
+        }
+
+        .btn-upload {
+            background: var(--brand-primary);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-upload:hover {
+            background: var(--brand-hover);
+        }
+
+        .format-badges {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .format-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+        }
+
+        /* ── Editor ── */
+        #editor-area {
+            display: none;
+        }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Controls ── */
+        .controls-panel {
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .ctrl-section {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .ctrl-section:last-child {
+            border-bottom: none;
+        }
+
+        .ctrl-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .file-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--bg-body);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .file-bar i {
+            color: var(--brand-primary);
+        }
+
+        .file-bar-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-bar-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-bar-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .btn-change {
+            background: none;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .btn-change:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        /* Quality slider */
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider-row input[type="range"] {
+            flex: 1;
+        }
+
+        .slider-val {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--brand-primary);
+            min-width: 36px;
+            text-align: right;
+        }
+
+        /* Mode toggle lossless/lossy */
+        .mode-tabs {
+            display: flex;
+            gap: 6px;
+        }
+
+        .mode-tab {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .mode-tab:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .mode-tab.active {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        /* Format select */
+        .format-select {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Toggle */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .toggle-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .toggle-row label {
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        .toggle {
+            position: relative;
+            width: 38px;
+            height: 20px;
+            background: var(--border-subtle);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .toggle.on {
+            background: var(--brand-primary);
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            transition: left 0.2s;
+        }
+
+        .toggle.on::after {
+            left: 21px;
+        }
+
+        /* Batch */
+        .batch-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .batch-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .batch-item:hover {
+            border-color: var(--brand-primary);
+        }
+
+        .batch-item.active {
+            border-color: var(--brand-primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .batch-thumb {
+            width: 32px;
+            height: 32px;
+            object-fit: cover;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .batch-name {
+            flex: 1;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .batch-saving {
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .batch-saving.good {
+            color: #059669;
+        }
+
+        .batch-saving.bad {
+            color: #ef4444;
+        }
+
+        .batch-saving.pending {
+            color: var(--text-muted);
+        }
+
+        .batch-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 3px;
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .batch-remove:hover {
+            color: #ef4444;
+        }
+
+        /* Download button */
+        .btn-download {
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, var(--brand-primary), var(--accent-color));
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35);
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-download:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .btn-download:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--text-muted);
+            box-shadow: none;
+        }
+
+        .trust-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(5, 150, 105, 0.1);
+            color: #059669;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            margin-top: 10px;
+            width: 100%;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        /* ── Preview panel ── */
+        .preview-panel {
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .preview-topbar-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 6px 12px;
+            min-width: 70px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .stat-value.green {
+            color: #059669;
+        }
+
+        .stat-value.red {
+            color: #ef4444;
+        }
+
+        /* Comparison slider */
+        .compare-wrap {
+            flex: 1;
+            position: relative;
+            min-height: 380px;
+            overflow: hidden;
+            cursor: col-resize;
+            background: repeating-conic-gradient(var(--border-subtle) 0% 25%, transparent 0% 50%) 0 0 / 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .compare-wrap canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%;
+            max-height: 460px;
+            display: block;
+        }
+
+        #canvas-original {
+            z-index: 1;
+        }
+
+        #canvas-compressed {
+            z-index: 2;
+            clip-path: inset(0 50% 0 0);
+        }
+
+        .compare-divider {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: white;
+            z-index: 10;
+            left: 50%;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        .compare-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 11;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-primary);
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+
+        .compare-label {
+            position: absolute;
+            top: 10px;
+            z-index: 12;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            pointer-events: none;
+        }
+
+        .label-original {
+            left: 10px;
+        }
+
+        .label-compressed {
+            right: 10px;
+        }
+
+        .preview-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: var(--text-muted);
+            min-height: 380px;
+        }
+
+        .preview-placeholder i {
+            font-size: 3rem;
+            opacity: 0.3;
+        }
+
+        /* Progress */
+        #progress-wrap {
+            display: none;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        #progress-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .progress-track {
+            background: var(--border-subtle);
+            border-radius: 50px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand-primary), var(--accent-color));
+            border-radius: 50px;
+            transition: width 0.2s;
+            width: 0%;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Aria live region */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+
+    <!-- Aria live region per screen reader -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="aria-status"></div>
+
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu"><span></span><span></span><span></span></button>
+            <div class="logo">
+                <a href="../index.html" aria-label="Btoolsify - Torna alla homepage"><strong>Btoolsify</strong></a>
+            </div>
+        </div>
+        <div class="search-container">
+            <input type="search" id="search-bar" placeholder="Cerca strumenti..." aria-label="Cerca strumenti"
+                autocomplete="off">
+            <button id="search-btn" aria-label="Cerca"><i class="fas fa-search"></i></button>
+            <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema"><i class="fas fa-moon"></i></button>
+            <button id="mobile-search-toggle" aria-label="Apri ricerca"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <nav id="side-bar" aria-label="Menu principale">
+            <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Hot</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-info-circle"></i><span>Chi Siamo</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-envelope"></i><span>Contatti</span></a>
+        </nav>
+
+        <main id="main-content">
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../tools.html">Strumenti</a></li>
+                    <li aria-current="page">Image Compressor</li>
+                </ol>
+            </nav>
+
+            <div class="content-section">
+                <h1 class="section-title">Image Compressor</h1>
+                <p class="section-intro" style="margin-bottom:24px; color:var(--text-muted);">
+                    Comprimi JPG, PNG e WEBP con preview comparativa live.<br>
+                    <strong>Privacy 100%</strong> — tutto elaborato nel browser, nessun upload.
+                </p>
+
+                <!-- Upload Zone -->
+                <div id="upload-zone" class="upload-zone" style="max-width:960px; margin:0 auto;" role="button"
+                    tabindex="0" aria-label="Carica immagini da comprimere">
+                    <i class="fas fa-file-image upload-icon" aria-hidden="true"></i>
+                    <div class="upload-text">
+                        <h3>Trascina qui le tue immagini</h3>
+                        <p>o clicca per selezionare • JPG, PNG, WEBP</p>
+                    </div>
+                    <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-plus" aria-hidden="true"></i> Seleziona immagini
+                    </button>
+                    <input type="file" id="fileInput" class="hidden" accept="image/jpeg,image/png,image/webp" multiple
+                        aria-label="Seleziona file immagine">
+                    <div class="format-badges" aria-hidden="true">
+                        <span class="format-badge">JPG</span>
+                        <span class="format-badge">PNG</span>
+                        <span class="format-badge">WEBP</span>
+                        <span class="format-badge">Batch</span>
+                        <span class="format-badge">Privacy 100%</span>
+                    </div>
+                </div>
+
+                <!-- Editor Area -->
+                <div id="editor-area" style="max-width:1100px; margin:0 auto;">
+
+                    <div class="file-bar" style="border-radius:12px; margin-bottom:16px;">
+                        <i class="fas fa-image" aria-hidden="true"></i>
+                        <div class="file-bar-info">
+                            <div class="file-bar-name" id="current-filename">—</div>
+                            <div class="file-bar-meta" id="current-meta">—</div>
+                        </div>
+                        <button class="btn-change" onclick="resetTool()">
+                            <i class="fas fa-times" aria-hidden="true"></i> Cambia
+                        </button>
+                    </div>
+
+                    <div class="editor-grid">
+
+                        <!-- ── LEFT: Controls ── -->
+                        <div class="controls-panel" role="form" aria-label="Impostazioni compressione">
+
+                            <!-- Modalità -->
+                            <div class="ctrl-section">
+                                <div class="ctrl-title" id="mode-label">Modalità</div>
+                                <div class="mode-tabs" role="group" aria-labelledby="mode-label">
+                                    <button class="mode-tab active" data-mode="lossy" aria-pressed="true"
+                                        onclick="setMode('lossy')">
+                                        Lossy
+                                    </button>
+                                    <button class="mode-tab" data-mode="lossless" aria-pressed="false"
+                                        onclick="setMode('lossless')">
+                                        Lossless
+                                    </button>
+                                </div>
+                                <small
+                                    style="color:var(--text-muted); font-size:0.78rem; margin-top:8px; display:block;"
+                                    id="mode-hint">
+                                    Lossy: file più piccolo, minima perdita visibile.
+                                </small>
+                            </div>
+
+                            <!-- Qualità -->
+                            <div class="ctrl-section" id="quality-section">
+                                <div class="ctrl-title">
+                                    <label for="quality-slider">Qualità</label>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="quality-slider" min="1" max="100" value="80"
+                                        aria-label="Qualità compressione" aria-valuemin="1" aria-valuemax="100"
+                                        aria-valuenow="80" oninput="onQualitySlide(this.value)">
+                                    <span class="slider-val" id="quality-val" aria-live="polite">80</span>
+                                </div>
+                                <small
+                                    style="color:var(--text-muted); font-size:0.78rem; margin-top:4px; display:block;">
+                                    80 = ottimo bilanciamento qualità/peso. PNG ignora questo valore.
+                                </small>
+                            </div>
+
+                            <!-- Formato output -->
+                            <div class="ctrl-section">
+                                <div class="ctrl-title"><label for="output-format">Formato output</label></div>
+                                <select class="format-select" id="output-format" aria-label="Formato file di output"
+                                    onchange="scheduleLivePreview()">
+                                    <option value="original">Mantieni originale</option>
+                                    <option value="image/jpeg">JPG</option>
+                                    <option value="image/png">PNG</option>
+                                    <option value="image/webp">WEBP</option>
+                                </select>
+                            </div>
+
+                            <!-- Opzioni -->
+                            <div class="ctrl-section">
+                                <div class="ctrl-title">Opzioni</div>
+                                <div class="toggle-row">
+                                    <label for="toggle-bg">Sfondo bianco (trasparenza)</label>
+                                    <div class="toggle" id="toggle-bg" role="switch" aria-checked="false" tabindex="0"
+                                        onclick="toggleOpt('bg')"
+                                        onkeydown="if(event.key==='Enter'||event.key===' ')toggleOpt('bg')"></div>
+                                </div>
+                                <div class="toggle-row">
+                                    <label for="toggle-strip">Rimuovi metadati EXIF</label>
+                                    <div class="toggle on" id="toggle-strip" role="switch" aria-checked="true"
+                                        tabindex="0" onclick="toggleOpt('strip')"
+                                        onkeydown="if(event.key==='Enter'||event.key===' ')toggleOpt('strip')"></div>
+                                </div>
+                                <div class="toggle-row">
+                                    <label for="toggle-web">Ottimizza per Web</label>
+                                    <div class="toggle" id="toggle-web" role="switch" aria-checked="false" tabindex="0"
+                                        onclick="toggleOpt('web')"
+                                        onkeydown="if(event.key==='Enter'||event.key===' ')toggleOpt('web')"></div>
+                                </div>
+                            </div>
+
+                            <!-- Batch -->
+                            <div class="ctrl-section" id="batch-section" style="display:none;">
+                                <div class="ctrl-title"
+                                    style="display:flex;align-items:center;justify-content:space-between;">
+                                    <span>Batch (<span id="batch-count">0</span> file)</span>
+                                    <button class="btn-change" onclick="document.getElementById('fileInput').click()"
+                                        aria-label="Aggiungi altre immagini">+ Aggiungi</button>
+                                </div>
+                                <div class="batch-list" id="batch-list" role="list"
+                                    aria-label="Lista immagini da comprimere"></div>
+                            </div>
+
+                            <!-- Download -->
+                            <div class="ctrl-section">
+                                <button class="btn-download" id="download-btn" onclick="downloadAll()"
+                                    aria-label="Scarica immagini compresse">
+                                    <i class="fas fa-download" aria-hidden="true"></i>
+                                    <span id="download-label">Scarica</span>
+                                </button>
+                                <div class="trust-badge" aria-label="Privacy garantita">
+                                    <i class="fas fa-shield-alt" aria-hidden="true"></i> Nessun upload — tutto nel
+                                    browser
+                                </div>
+                            </div>
+
+                        </div><!-- /controls-panel -->
+
+                        <!-- ── RIGHT: Preview comparativa ── -->
+                        <div class="preview-panel" role="region" aria-label="Anteprima comparativa">
+
+                            <div class="preview-topbar">
+                                <span class="preview-topbar-title">
+                                    <i class="fas fa-sliders-h" aria-hidden="true"></i> Trascina per confrontare
+                                </span>
+                                <div class="stats-bar" aria-live="polite" aria-label="Statistiche compressione">
+                                    <div class="stat-block">
+                                        <span class="stat-label">Originale</span>
+                                        <span class="stat-value" id="stat-original">—</span>
+                                    </div>
+                                    <div class="stat-block">
+                                        <span class="stat-label">Compresso</span>
+                                        <span class="stat-value" id="stat-compressed">—</span>
+                                    </div>
+                                    <div class="stat-block">
+                                        <span class="stat-label">Risparmio</span>
+                                        <span class="stat-value green" id="stat-saving">—</span>
+                                    </div>
+                                    <div class="stat-block">
+                                        <span class="stat-label">Dimensioni</span>
+                                        <span class="stat-value" id="stat-dims">—</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Comparison area -->
+                            <div class="compare-wrap" id="compare-wrap" style="display:none;" role="img"
+                                aria-label="Confronto immagine originale e compressa">
+                                <canvas id="canvas-original" aria-hidden="true"></canvas>
+                                <canvas id="canvas-compressed" aria-hidden="true"></canvas>
+                                <div class="compare-divider" id="compare-divider" aria-hidden="true"></div>
+                                <div class="compare-handle" aria-hidden="true"><i class="fas fa-arrows-alt-h"></i></div>
+                                <span class="compare-label label-original" aria-hidden="true">Originale</span>
+                                <span class="compare-label label-compressed" aria-hidden="true">Compresso</span>
+                            </div>
+
+                            <div class="preview-placeholder" id="preview-placeholder">
+                                <i class="fas fa-image" aria-hidden="true"></i>
+                                <span>Carica un'immagine per vedere la preview</span>
+                            </div>
+
+                            <div id="progress-wrap" role="status" aria-live="polite">
+                                <div id="progress-label">Elaborazione...</div>
+                                <div class="progress-track">
+                                    <div id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                                        aria-valuenow="0"></div>
+                                </div>
+                            </div>
+
+                        </div><!-- /preview-panel -->
+                    </div><!-- /editor-grid -->
+                </div><!-- /editor-area -->
+            </div>
+        </main>
+
+        <aside id="right-sidebar">
+            <div class="sidebar-section">
+                <h4><i class="fas fa-fire"></i> Più Popolari</h4>
+                <ul class="trending-list">
+                    <li><a href="image-resizer.html">Image Resizer</a></li>
+                    <li><a href="jpg-to-pdf.html">JPG to PDF</a></li>
+                    <li><a href="merge-pdf.html">Merge PDF</a></li>
+                    <li><a href="qr-generator.html">QR Generator</a></li>
+                    <li><a href="image-compressor.html" class="active">Image Compressor</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section ad-placeholder">
+                <p>Annuncio</p>
+            </div>
+        </aside>
+    </div>
+
+    <nav class="mobile-tabs" aria-label="Navigazione mobile">
+        <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+        <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-search"></i><span>Cerca</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Trend</span></a>
+    </nav>
+
+    <footer id="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <script src="../data/search-index.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/image-compressor.js"></script>
+</body>
+
+</html>

@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><!-- PAGE TITLE PLACEHOLDER --></title>
+    <title>Tutti gli Strumenti | Btoolsify</title>
 
-    <!-- Theme Script (Anti-FOUC) -->
     <script>
         (function () {
             const theme = localStorage.getItem('theme') || 'light';
@@ -14,36 +13,32 @@
         })();
     </script>
 
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="<!-- DESCRIPTION PLACEHOLDER -->">
-    <meta name="keywords" content="<!-- KEYWORDS PLACEHOLDER -->">
+    <meta name="description"
+        content="Esplora tutti gli strumenti gratuiti di Btoolsify: convertitori PDF, editor immagini, utility di testo e altro ancora. 100% gratis e sicuro.">
+    <meta name="keywords" content="PDF tools, image editor, utility online, gratis, btoolsify, strumenti web">
     <meta name="author" content="Btoolsify">
     <meta name="theme-color" content="#2563eb">
     <meta name="google-adsense-account" content="ca-pub-3550535610382365">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3550535610382365"
         crossorigin="anonymous"></script>
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="<!-- OG:URL PLACEHOLDER -->">
-    <meta property="og:title" content="<!-- OG:TITLE PLACEHOLDER -->">
-    <meta property="og:description" content="<!-- OG:DESCRIPTION PLACEHOLDER -->">
+    <meta property="og:url" content="https://btoolsify.netlify.app/tools.html">
+    <meta property="og:title" content="Tutti gli Strumenti - Btoolsify">
+    <meta property="og:description" content="Collezione completa di strumenti smart online gratuiti.">
     <meta property="og:image" content="https://btoolsify.netlify.app/apple-touch-icon.png">
 
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="<!-- TWITTER:URL PLACEHOLDER -->">
-    <meta property="twitter:title" content="<!-- TWITTER:TITLE PLACEHOLDER -->">
-    <meta property="twitter:description" content="<!-- TWITTER:DESCRIPTION PLACEHOLDER -->">
+    <meta property="twitter:url" content="https://btoolsify.netlify.app/tools.html">
+    <meta property="twitter:title" content="Tutti gli Strumenti - Btoolsify">
+    <meta property="twitter:description" content="Utility gratuite per facilitare il tuo lavoro digitale.">
     <meta property="twitter:image" content="https://btoolsify.netlify.app/apple-touch-icon.png">
 
-    <!-- Favicon & PWA -->
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
-    <link rel="canonical" href="<!-- CANONICAL URL PLACEHOLDER -->">
+    <link rel="canonical" href="https://btoolsify.netlify.app/tools.html">
 
-    <!-- Styles -->
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,36 +46,173 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- DESIGN ESCLUSIVO PREMIUM PER TOOLS.HTML --- */
+
+        /* 1. Hero con gradiente mesh e profondità */
+        .tools-hero {
+            background: radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+                var(--bg-surface);
+            padding: 60px 20px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .tools-hero h1 {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.8rem;
+            letter-spacing: -1px;
+            margin-bottom: 15px;
+        }
+
+        /* 2. Filtri stile "Pill" moderna */
+        .filter-chips {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            padding: 10px;
+            background: var(--bg-surface);
+            width: fit-content;
+            margin: 0 auto 40px;
+            border-radius: 100px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-chip {
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            padding: 10px 22px;
+            border-radius: 100px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .filter-chip:hover {
+            color: var(--brand-primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .filter-chip.active {
+            background: var(--brand-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        /* 3. Card ridisegnate con icone fluttuanti */
+        #tools-grid .card {
+            background: var(--bg-surface);
+            border-radius: 18px;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #tools-grid .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--brand-primary);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        #tools-grid .card h3 {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.25rem;
+            color: var(--text-main);
+        }
+
+        #tools-grid .card h3 i {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--brand-primary);
+            border-radius: 12px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        #tools-grid .card:hover h3 i {
+            background: var(--brand-primary);
+            color: white;
+            transform: rotate(-10deg) scale(1.1);
+        }
+
+        .cta-text {
+            margin-top: 20px;
+            color: var(--brand-primary);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 4. FAQ e Steps con design pulito */
+        .step {
+            background: var(--bg-surface);
+            padding: 25px;
+            border-radius: 16px;
+            border-bottom: 4px solid var(--brand-primary);
+        }
+
+        .faq-accordion details {
+            background: var(--bg-surface);
+            margin-bottom: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .faq-accordion summary {
+            padding: 20px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Sidebar highlighting */
+        #side-bar a.active {
+            background: linear-gradient(90deg, rgba(37, 99, 235, 0.1) 0%, transparent 100%);
+            border-left: 4px solid var(--brand-primary);
+            color: var(--brand-primary);
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Skip to main content for accessibility -->
     <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
 
-    <!-- Header -->
     <header id="header">
         <div class="header-left">
             <button id="menu-toggle" aria-label="Apri menu">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </button>
             <div class="logo">
-                <a href="/" aria-label="Btoolsify - Torna alla homepage">
+                <a href="index.html" aria-label="Btoolsify - Torna alla homepage">
                     <strong>Btoolsify</strong>
                 </a>
             </div>
         </div>
 
-        <!-- Search Bar (center on desktop) -->
         <div class="search-container">
-            <input type="search" id="search-bar" placeholder="Cerca strumenti..." aria-label="Cerca strumenti"
-                autocomplete="off">
+            <input type="search" id="search-bar" placeholder="Cerca strumenti..." aria-label="Cerca strumenti">
             <button id="search-btn" aria-label="Cerca"><i class="fas fa-search"></i></button>
             <div id="search-dropdown" class="search-dropdown"></div>
         </div>
 
-        <!-- Right controls -->
         <div class="header-right">
             <button id="theme-toggle" aria-label="Cambia tema">
                 <i class="fas fa-moon"></i>
@@ -92,89 +224,199 @@
     </header>
 
     <div class="app-container">
-        <!-- Sidebar -->
         <nav id="side-bar" aria-label="Menu principale">
             <a href="index.html"><i class="fas fa-home"></i><span>Home</span></a>
-            <a href="tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="tools.html" class="active"><i class="fas fa-tools"></i><span>Strumenti</span></a>
             <a href="blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
             <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Hot</span></a>
             <a href="#" onclick="showComingSoon(event)"><i class="fas fa-info-circle"></i><span>Chi Siamo</span></a>
             <a href="#" onclick="showComingSoon(event)"><i class="fas fa-envelope"></i><span>Contatti</span></a>
         </nav>
 
-        <!-- Main Content -->
         <main id="main-content">
-            <!-- MAIN CONTENT PLACEHOLDER -->
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="index.html">Home</a></li>
+                    <li aria-current="page">Strumenti</li>
+                </ol>
+            </nav>
+
+            <div class="tools-hero">
+                <h1>Esplora i Nostri Strumenti</h1>
+                <p>La suite gratuita più completa per gestire PDF, immagini e testi senza installare nulla.</p>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-chips">
+                    <button class="filter-chip active" data-filter="all">Tutti</button>
+                    <button class="filter-chip" data-filter="pdf">PDF</button>
+                    <button class="filter-chip" data-filter="immagini">Immagini</button>
+                    <button class="filter-chip" data-filter="testo">Testo</button>
+                    <button class="filter-chip" data-filter="sicurezza">Sicurezza</button>
+                    <button class="filter-chip" data-filter="utilita">Utilità</button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div id="tools-grid" class="card-grid">
+                    <div class="card" data-category="pdf">
+                        <a href="tools/jpg-to-pdf.html">
+                            <h3><i class="fas fa-file-pdf"></i> JPG to PDF</h3>
+                            <p>Crea documenti PDF da immagini JPG, PNG o WebP in pochi secondi.</p>
+                            <span class="cta-text">Avvia <i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+                    <div class="card" data-category="pdf">
+                        <a href="tools/merge-pdf.html">
+                            <h3><i class="fas fa-object-group"></i> Merge PDF</h3>
+                            <p>Unisci più file in un unico documento organizzato.</p>
+                            <span class="cta-text">Avvia <i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+                    <div class="card" data-category="pdf">
+                        <a href="tools/split-pdf.html">
+                            <h3><i class="fas fa-cut"></i> Split PDF</h3>
+                            <p>Dividi documenti o estrai pagine singole con precisione.</p>
+                            <span class="cta-text">Avvia <i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+
+                    <div class="card" data-category="immagini">
+                        <a href="tools/image-resizer.html">
+                            <h3><i class="fas fa-expand-arrows-alt"></i> Image Resizer</h3>
+                            <p>Cambia dimensioni alle tue foto senza perdere la proporzione originale.</p>
+                            <span class="cta-text">Avvia <i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+                    <div class="card" data-category="immagini">
+                        <a href="tools/image-compressor.html">
+                            <h3><i class="fas fa-weight-hanging"></i> Compressor</h3>
+                            <p>Riduci il peso delle immagini per velocizzare il tuo sito web.</p>
+                            <span class="cta-text">Avvia <i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+                    <div class="card" data-category="utilita">
+                        <a href="tools/palette-picker.html">
+                            <h3><i class="fas fa-palette"></i> Palette Picker</h3>
+                            <p>Estrai i colori dominanti da qualsiasi immagine caricata.</p>
+                            <span class="cta-text">Avvia <i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+
+                    <div class="card" data-category="utilita">
+                        <a href="tools/qr-generator.html">
+                            <h3><i class="fas fa-qrcode"></i> QR Generator</h3>
+                            <p>Crea codici QR professionali per link, Wi-Fi o contatti.</p>
+                            <span class="cta-text">Avvia <i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+                    <div class="card" data-category="testo">
+                        <a href="#" onclick="showComingSoon(event)">
+                            <h3><i class="fas fa-font"></i> Word Counter</h3>
+                            <p>Analisi completa di parole, caratteri e tempi di lettura.</p>
+                            <span class="cta-text">In arrivo <i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+                    <div class="card" data-category="sicurezza">
+                        <a href="#" onclick="showComingSoon(event)">
+                            <h3><i class="fas fa-key"></i> Password Gen</h3>
+                            <p>Genera chiavi d'accesso ultra sicure e impossibili da hackerare.</p>
+                            <span class="cta-text">In arrivo <i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section tool-education">
+                <div class="education-grid">
+                    <section class="how-it-works">
+                        <h2 class="section-title">Guida Rapida</h2>
+                        <div class="steps-container">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <h5>Scegli</h5>
+                                <p>Trova il tool nella griglia qui sopra.</p>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <h5>Elabora</h5>
+                                <p>Carica i file. Tutto avviene nel tuo browser.</p>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <h5>Scarica</h5>
+                                <p>Prendi il risultato finito in un istante.</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
         </main>
 
-        <!-- Right Sidebar -->
-        <aside id="right-sidebar" aria-label="Contenuti correlati">
+        <aside id="right-sidebar">
             <div class="sidebar-section">
-                <h4><i class="fas fa-fire"></i> Strumenti Popolari</h4>
+                <h4><i class="fas fa-fire"></i> Top Tool</h4>
                 <ul class="trending-list">
                     <li><a href="tools/jpg-to-pdf.html">JPG to PDF</a></li>
                     <li><a href="tools/qr-generator.html">QR Generator</a></li>
-                    <li><a href="tools/palette-picker.html">Palette Picker</a></li>
+                    <li><a href="tools/image-resizer.html">Image Resizer</a></li>
                 </ul>
             </div>
-
             <div class="sidebar-section ad-placeholder">
-                <!-- AdSense Auto Ads Slot -->
                 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3550535610382365"
-                    data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                    data-ad-slot="XXXXXXXXXX" data-ad-format="auto"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-
-            <div class="sidebar-section">
-                <h4><i class="fas fa-newspaper"></i> Ultime Guide</h4>
-                <ul class="trending-list">
-                    <li><a href="#">Ottimizzare immagini Web</a></li>
-                    <li><a href="#">Guida ai PDF sicuri</a></li>
-                </ul>
             </div>
         </aside>
     </div>
 
-    <!-- Mobile Tab Navigation -->
-    <nav class="mobile-tabs" aria-label="Navigazione mobile rapida">
-        <a href="index.html"><i class="fas fa-home"></i><span>Home</span></a>
-        <a href="tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
-        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-search"></i><span>Cerca</span></a>
-        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Trend</span></a>
-    </nav>
-
-    <!-- Footer -->
     <footer id="footer">
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Btoolsify</h3>
-                <p>Strumenti smart per persone smart. Semplifica la tua vita digitale.</p>
+                <p>Digital Utility Suite © 2026</p>
             </div>
             <div class="footer-section">
-                <h4>Link Utili</h4>
+                <h4>Link</h4>
                 <ul>
-                    <li><a href="#" onclick="showComingSoon(event)">Chi Siamo</a></li>
-                    <li><a href="#" onclick="showComingSoon(event)">Contatti</a></li>
-                    <li><a href="#" onclick="showComingSoon(event)">Privacy Policy</a></li>
-                    <li><a href="#" onclick="showComingSoon(event)">Termini di Servizio</a></li>
+                    <li><a href="#" onclick="showComingSoon(event)">Privacy</a></li>
+                    <li><a href="#" onclick="showComingSoon(event)">Termini</a></li>
                 </ul>
             </div>
-            <div class="footer-section">
-                <h4>Seguici</h4>
-                <div class="social-icons">
-                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-facebook"></i></a>
-                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-instagram"></i></a>
-                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-twitter"></i></a>
-                    <a href="#" onclick="showComingSoon(event)"><i class="fab fa-linkedin"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <script>
+        // Logica Filtri con animazione fluida
+        const filterChips = document.querySelectorAll('.filter-chip');
+        const toolCards = document.querySelectorAll('#tools-grid .card');
+
+        filterChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                filterChips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+
+                const filter = chip.dataset.filter;
+
+                toolCards.forEach(card => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.95)';
+
+                    setTimeout(() => {
+                        if (filter === 'all' || card.dataset.category === filter) {
+                            card.style.display = 'block';
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'scale(1)';
+                            }, 50);
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }, 200);
+                });
+            });
+        });
+    </script>
     <script src="data/search-index.js"></script>
     <script src="assets/js/main.js"></script>
 </body>
