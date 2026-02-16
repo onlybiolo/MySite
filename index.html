@@ -5,12 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Btoolsify - Strumenti Gratuiti Online: PDF, QR Code, Immagini</title>
-    <script>
-        (function () {
-            const theme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', theme);
-        })();
-    </script>
     <meta name="description"
         content="Btoolsify: Strumenti online gratuiti per convertire PDF, generare QR Code e ridimensionare immagini. Semplifica la tua vita digitale con i nostri tool sicuri e veloci.">
     <meta name="keywords" content="PDF, convertitore, QR Code, immagini, ridimensiona, gratis, online, strumenti smart">
@@ -36,6 +30,7 @@
     <meta property="twitter:image" content="https://btoolsify.netlify.app/apple-touch-icon.png">
 
     <!-- Favicon & PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
@@ -211,8 +206,8 @@
             <div class="sidebar-section">
                 <h4><i class="fas fa-newspaper"></i> Ultime Guide</h4>
                 <ul class="trending-list">
-                    <li><a href="#">Ottimizzare immagini Web</a></li>
-                    <li><a href="#">Guida ai PDF sicuri</a></li>
+                    <li><a href="#" onclick="showComingSoon(event)">Ottimizzare immagini Web</a></li>
+                    <li><a href="#" onclick="showComingSoon(event)">Guida ai PDF sicuri</a></li>
                 </ul>
             </div>
         </aside>

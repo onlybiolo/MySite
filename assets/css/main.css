@@ -323,30 +323,6 @@ body {
     }
 }
 
-/* Tablet Sidebar (Icon Only) */
-@media (max-width: 1024px) and (min-width: 769px) {
-    #side-bar {
-        width: 80px;
-        align-items: center;
-        padding: 20px 0;
-    }
-
-    #side-bar a {
-        font-size: 0;
-        /* Hide text */
-        justify-content: center;
-        padding: 15px 0;
-        width: 60px;
-    }
-
-    #side-bar a i {
-        font-size: 1.4rem;
-        /* Restore icon size */
-        margin: 0;
-        width: auto;
-        opacity: 1;
-    }
-}
 
 .card h3 i {
     margin-right: 8px;

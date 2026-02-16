@@ -2,55 +2,79 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://btoolsify.netlify.app/</loc>
-    <lastmod>2026-02-13</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://btoolsify.netlify.app/tools</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://btoolsify.netlify.app/tools.html</loc>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://btoolsify.netlify.app/blog</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://btoolsify.netlify.app/blog.html</loc>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://btoolsify.netlify.app/blogs/top10qr</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://btoolsify.netlify.app/blogs/top10qr.html</loc>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://btoolsify.netlify.app/tools/qr-generator</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://btoolsify.netlify.app/tools/qr-generator.html</loc>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://btoolsify.netlify.app/tools/palette-picker</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://btoolsify.netlify.app/tools/palette-picker.html</loc>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://btoolsify.netlify.app/tools/jpg-to-pdf</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://btoolsify.netlify.app/tools/jpg-to-pdf.html</loc>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://btoolsify.netlify.app/tools/merge-pdf</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://btoolsify.netlify.app/tools/merge-pdf.html</loc>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://btoolsify.netlify.app/tools/split-pdf</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://btoolsify.netlify.app/tools/split-pdf.html</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://btoolsify.netlify.app/tools/image-resizer.html</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://btoolsify.netlify.app/tools/image-compressor.html</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://btoolsify.netlify.app/tools/word-counter.html</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://btoolsify.netlify.app/tools/contrast-checker.html</loc>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

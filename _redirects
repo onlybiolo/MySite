@@ -1,3 +1,5 @@
-/*  /index.html  200
+# Specific redirects first (Netlify processes top-to-bottom, first match wins)
 /tools/*  /tools/:splat.html  200
-/tools  /tools.html  200
+/tools    /tools.html         200
+/blog     /blog.html          200
+/blogs/*  /blogs/:splat.html  200

@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Counter: Conta Parole Online Gratis | Btoolsify</title>
+    <script>(function () { const t = localStorage.getItem('theme') || 'light'; document.documentElement.setAttribute('data-theme', t); })();</script>
+    <meta name="description"
+        content="Conta parole, caratteri, frasi e paragrafi in tempo reale. Gulpease, Flesch, TTR, keyword density, modalità Pomodoro. Gratis, senza login.">
+    <meta name="keywords"
+        content="conta parole, word counter, contatore parole, caratteri, tempo lettura, leggibilità, gulpease, flesch">
+    <meta name="author" content="Btoolsify">
+    <meta name="theme-color" content="#2563eb">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://btoolsify.netlify.app/tools/word-counter.html">
+    <meta property="og:title" content="Word Counter - Btoolsify">
+    <meta property="og:description" content="Analisi testo avanzata in tempo reale.">
+    <meta property="og:image" content="https://btoolsify.netlify.app/apple-touch-icon.png">
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Word Counter - Btoolsify">
+    <meta property="twitter:description" content="Conta parole online gratis con statistiche avanzate.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="canonical" href="https://btoolsify.netlify.app/tools/word-counter.html">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .wc-grid {
+            display: grid;
+            grid-template-columns: 1fr 290px;
+            gap: 16px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .wc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Editor */
+        .editor-panel {
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .editor-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .editor-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .editor-topbar-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+
+        .lang-badge {
+            font-size: 0.72rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50px;
+            padding: 2px 8px;
+            color: var(--text-muted);
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-action:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .btn-action.active {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .btn-action.danger:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        #editor {
+            width: 100%;
+            min-height: 440px;
+            padding: 20px;
+            border: none;
+            outline: none;
+            resize: vertical;
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-size: 1rem;
+            line-height: 1.8;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+            transition: border-left 0.3s;
+        }
+
+        #editor::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Stats panel */
+        .stats-panel {
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+            position: sticky;
+            top: 80px;
+        }
+
+        .stats-section {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .stats-section:last-child {
+            border-bottom: none;
+        }
+
+        .stats-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 9px 10px;
+            text-align: center;
+        }
+
+        .stat-card-val {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            line-height: 1;
+            margin-bottom: 3px;
+        }
+
+        .stat-card-label {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.8rem;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-row-label {
+            color: var(--text-muted);
+        }
+
+        .stat-row-val {
+            font-weight: 700;
+            color: var(--text-main);
+            text-align: right;
+        }
+
+        /* Leggibilità */
+        .readability-wrap {
+            display: flex;
+            gap: 10px;
+        }
+
+        .readability-block {
+            flex: 1;
+            text-align: center;
+        }
+
+        .readability-score {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            line-height: 1;
+        }
+
+        .readability-name {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .readability-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .readability-track {
+            background: var(--border-subtle);
+            border-radius: 50px;
+            height: 6px;
+            margin: 5px 0;
+            overflow: hidden;
+        }
+
+        .readability-bar {
+            height: 100%;
+            border-radius: 50px;
+            transition: width 0.4s, background 0.4s;
+        }
+
+        /* Keywords */
+        .keyword-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .keyword-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .keyword-word {
+            font-size: 0.78rem;
+            color: var(--text-main);
+            font-weight: 500;
+            min-width: 60px;
+        }
+
+        .keyword-bar-wrap {
+            flex: 1;
+            background: var(--border-subtle);
+            border-radius: 50px;
+            height: 5px;
+        }
+
+        .keyword-bar {
+            height: 100%;
+            border-radius: 50px;
+            background: var(--brand-primary);
+            transition: width 0.3s;
+        }
+
+        .keyword-count {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            min-width: 18px;
+            text-align: right;
+        }
+
+        /* Goal */
+        #goal-wrap {
+            display: none;
+            margin-top: 8px;
+        }
+
+        .goal-track {
+            background: var(--border-subtle);
+            border-radius: 50px;
+            height: 8px;
+            overflow: hidden;
+            margin: 6px 0 4px;
+        }
+
+        #goal-bar {
+            height: 100%;
+            border-radius: 50px;
+            background: var(--brand-primary);
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        #goal-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .goal-input-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .goal-input-row label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        #goal-input {
+            flex: 1;
+            padding: 5px 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-size: 0.82rem;
+        }
+
+        /* SEO */
+        #seo-input {
+            width: 100%;
+            padding: 7px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-size: 0.82rem;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+        }
+
+        /* Timer & Pomodoro */
+        .timer-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-val {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .btn-timer {
+            background: none;
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 4px 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .btn-timer:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .pomodoro-track {
+            background: var(--border-subtle);
+            border-radius: 50px;
+            height: 6px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        #pomodoro-bar {
+            height: 100%;
+            border-radius: 50px;
+            background: #ef4444;
+            transition: width 1s linear;
+            width: 0%;
+        }
+
+        /* Export */
+        .export-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-export {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-export:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        /* Autosave */
+        #autosave-badge {
+            font-size: 0.72rem;
+            color: #059669;
+            display: none;
+            align-items: center;
+            gap: 4px;
+        }
+
+        #autosave-badge.visible {
+            display: flex;
+        }
+
+        /* Bottom bar */
+        #bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-subtle);
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 200;
+            flex-wrap: wrap;
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .bar-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .bar-stat strong {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .bar-divider {
+            width: 1px;
+            height: 16px;
+            background: var(--border-subtle);
+        }
+
+        .bar-spacer {
+            flex: 1;
+        }
+
+        .bar-timer {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .bar-timer strong {
+            color: var(--brand-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Focus mode */
+        body.focus-mode #right-sidebar,
+        body.focus-mode .stats-panel,
+        body.focus-mode .breadcrumbs,
+        body.focus-mode .section-intro,
+        body.focus-mode .editor-topbar {
+            display: none !important;
+        }
+
+        body.focus-mode .wc-grid {
+            grid-template-columns: 1fr;
+        }
+
+        body.focus-mode #editor {
+            min-height: 80vh;
+            font-size: 1.1rem;
+        }
+
+        main {
+            padding-bottom: 56px;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+    <div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;"
+        id="aria-status"></div>
+
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu"><span></span><span></span><span></span></button>
+            <div class="logo"><a href="../index.html" aria-label="Btoolsify"><strong>Btoolsify</strong></a></div>
+        </div>
+        <div class="search-container">
+            <input type="search" id="search-bar" placeholder="Cerca strumenti..." aria-label="Cerca strumenti"
+                autocomplete="off">
+            <button id="search-btn" aria-label="Cerca"><i class="fas fa-search"></i></button>
+            <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema"><i class="fas fa-moon"></i></button>
+            <button id="mobile-search-toggle" aria-label="Apri ricerca"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <nav id="side-bar" aria-label="Menu principale">
+            <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Hot</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-info-circle"></i><span>Chi Siamo</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-envelope"></i><span>Contatti</span></a>
+        </nav>
+
+        <main id="main-content">
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../tools.html">Strumenti</a></li>
+                    <li aria-current="page">Word Counter</li>
+                </ol>
+            </nav>
+
+            <div class="content-section">
+                <h1 class="section-title">Word Counter</h1>
+                <p class="section-intro" style="margin-bottom:20px;color:var(--text-muted);">
+                    Analisi testo professionale in tempo reale — leggibilità, stile, SEO, Pomodoro.
+                </p>
+
+                <div class="wc-grid">
+
+                    <!-- ── Editor ── -->
+                    <div class="editor-panel">
+                        <div class="editor-topbar">
+                            <div class="editor-topbar-left">
+                                <span class="editor-topbar-title"><i class="fas fa-keyboard"></i> Editor</span>
+                                <span class="lang-badge" id="lang-badge">🇮🇹 Italiano</span>
+                                <span id="autosave-badge"><i class="fas fa-check-circle"></i> Salvato</span>
+                            </div>
+                            <div class="editor-actions">
+                                <button class="btn-action" id="btn-highlight" onclick="toggleHighlight()"
+                                    title="Evidenzia problemi nel testo">
+                                    <i class="fas fa-highlighter"></i> Highlight
+                                </button>
+                                <button class="btn-action" id="btn-focus" onclick="toggleFocus()"
+                                    title="Modalità focus">
+                                    <i class="fas fa-expand"></i> Focus
+                                </button>
+                                <button class="btn-action danger" onclick="clearEditor()">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <textarea id="editor" placeholder="Inizia a scrivere o incolla il tuo testo qui..."
+                            aria-label="Area di testo per l'analisi" spellcheck="true"></textarea>
+                    </div>
+
+                    <!-- ── Stats ── -->
+                    <div class="stats-panel" role="region" aria-label="Statistiche" aria-live="polite">
+
+                        <!-- Contatori -->
+                        <div class="stats-section">
+                            <div class="stats-title">Contatori</div>
+                            <div class="stat-grid">
+                                <div class="stat-card">
+                                    <div class="stat-card-val" id="s-words">0</div>
+                                    <div class="stat-card-label">Parole</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-card-val" id="s-chars">0</div>
+                                    <div class="stat-card-label">Caratteri</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-card-val" id="s-chars-ns">0</div>
+                                    <div class="stat-card-label">Senza spazi</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-card-val" id="s-sentences">0</div>
+                                    <div class="stat-card-label">Frasi</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-card-val" id="s-paragraphs">0</div>
+                                    <div class="stat-card-label">Paragrafi</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-card-val" id="s-lines">0</div>
+                                    <div class="stat-card-label">Righe</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analisi stile -->
+                        <div class="stats-section">
+                            <div class="stats-title">Analisi stile</div>
+                            <div class="stat-row"><span class="stat-row-label">Media parole/frase</span><span
+                                    class="stat-row-val" id="s-wpf">—</span></div>
+                            <div class="stat-row"><span class="stat-row-label">Lunghezza media parola</span><span
+                                    class="stat-row-val" id="s-awl">—</span></div>
+                            <div class="stat-row"><span class="stat-row-label">Tempo di lettura</span><span
+                                    class="stat-row-val" id="s-read">—</span></div>
+                            <div class="stat-row"><span class="stat-row-label">Frasi lunghe (&gt;25 p.)</span><span
+                                    class="stat-row-val" id="s-long">—</span></div>
+                            <div class="stat-row"><span class="stat-row-label">Varietà lessicale (TTR)</span><span
+                                    class="stat-row-val" id="s-ttr">—</span></div>
+                            <div class="stat-row"><span class="stat-row-label">Forma passiva</span><span
+                                    class="stat-row-val" id="s-passive">—</span></div>
+                            <div class="stat-row"><span class="stat-row-label">Parole deboli</span><span
+                                    class="stat-row-val" id="s-weak">—</span></div>
+                            <div class="stat-row"><span class="stat-row-label">Avverbi (-mente/-ly)</span><span
+                                    class="stat-row-val" id="s-adverbs">—</span></div>
+                            <div class="stat-row"><span class="stat-row-label">Ripetizioni ravvicinate</span><span
+                                    class="stat-row-val" id="s-repetitions">—</span></div>
+                        </div>
+
+                        <!-- Leggibilità -->
+                        <div class="stats-section">
+                            <div class="stats-title">Leggibilità</div>
+                            <div class="readability-wrap">
+                                <div class="readability-block">
+                                    <div class="readability-name">Gulpease</div>
+                                    <div class="readability-score" id="s-gulpease">—</div>
+                                    <div class="readability-track">
+                                        <div class="readability-bar" id="s-gulpease-bar" style="width:0%"></div>
+                                    </div>
+                                    <div class="readability-label" id="s-gulpease-label">—</div>
+                                </div>
+                                <div class="readability-block">
+                                    <div class="readability-name">Flesch</div>
+                                    <div class="readability-score" id="s-flesch">—</div>
+                                    <div class="readability-track">
+                                        <div class="readability-bar" id="s-flesch-bar" style="width:0%"></div>
+                                    </div>
+                                    <div class="readability-label" id="s-flesch-label">—</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Produttività -->
+                        <div class="stats-section">
+                            <div class="stats-title">Produttività</div>
+                            <div class="stat-row"><span class="stat-row-label">Velocità scrittura</span><span
+                                    class="stat-row-val" id="s-wpm">—</span></div>
+                            <div class="timer-wrap" style="margin-top:8px;">
+                                <span style="font-size:0.78rem;color:var(--text-muted);">Timer:</span>
+                                <span class="timer-val" id="s-timer">00:00</span>
+                                <button class="btn-timer" onclick="resetTimer()"><i class="fas fa-redo"></i>
+                                    Reset</button>
+                            </div>
+                            <!-- Obiettivo parole -->
+                            <div style="margin-top:10px;">
+                                <div class="goal-input-row">
+                                    <label for="goal-input">Obiettivo:</label>
+                                    <input type="number" id="goal-input" placeholder="es. 1000" min="1"
+                                        aria-label="Obiettivo parole">
+                                    <span style="font-size:0.75rem;color:var(--text-muted);">p.</span>
+                                </div>
+                                <div id="goal-wrap">
+                                    <div class="goal-track">
+                                        <div id="goal-bar"></div>
+                                    </div>
+                                    <div id="goal-label"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pomodoro -->
+                        <div class="stats-section">
+                            <div class="stats-title">🍅 Pomodoro</div>
+                            <div class="timer-wrap">
+                                <span class="timer-val" id="s-pomodoro" style="color:#ef4444;">25:00</span>
+                                <button class="btn-timer" id="btn-pomodoro" onclick="togglePomodoro()"><i
+                                        class="fas fa-play"></i> Avvia</button>
+                                <button class="btn-timer" onclick="resetPomodoro()"><i class="fas fa-redo"></i></button>
+                            </div>
+                            <div class="pomodoro-track">
+                                <div id="pomodoro-bar"></div>
+                            </div>
+                        </div>
+
+                        <!-- Parole frequenti -->
+                        <div class="stats-section">
+                            <div class="stats-title">Parole frequenti</div>
+                            <div class="keyword-list" id="keyword-list">
+                                <span style="font-size:0.78rem;color:var(--text-muted);">Scrivi del testo...</span>
+                            </div>
+                        </div>
+
+                        <!-- SEO mode -->
+                        <div class="stats-section">
+                            <div class="stats-title">🎯 SEO — Keyword target</div>
+                            <input type="text" id="seo-input" placeholder="es. marketing digitale"
+                                aria-label="Keyword SEO target">
+                            <div id="seo-results">
+                                <span style="font-size:0.78rem;color:var(--text-muted);">Inserisci una keyword
+                                    target</span>
+                            </div>
+                        </div>
+
+                        <!-- Export -->
+                        <div class="stats-section">
+                            <div class="stats-title">Esporta</div>
+                            <div class="export-btns">
+                                <button class="btn-export" onclick="exportTxt()"><i class="fas fa-file-alt"></i>
+                                    TXT</button>
+                                <button class="btn-export" onclick="exportPdf()"><i class="fas fa-file-pdf"></i>
+                                    PDF</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside id="right-sidebar">
+            <div class="sidebar-section">
+                <h4><i class="fas fa-fire"></i> Più Popolari</h4>
+                <ul class="trending-list">
+                    <li><a href="image-resizer.html">Image Resizer</a></li>
+                    <li><a href="image-compressor.html">Image Compressor</a></li>
+                    <li><a href="jpg-to-pdf.html">JPG to PDF</a></li>
+                    <li><a href="merge-pdf.html">Merge PDF</a></li>
+                    <li><a href="word-counter.html" class="active">Word Counter</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section ad-placeholder">
+                <p>Annuncio</p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Bottom bar fissa -->
+    <div id="bottom-bar" role="status" aria-live="polite">
+        <div class="bar-stat"><i class="fas fa-font"></i>&nbsp;Parole: <strong id="bar-words">0</strong></div>
+        <div class="bar-divider"></div>
+        <div class="bar-stat"><i class="fas fa-text-width"></i>&nbsp;Caratteri: <strong id="bar-chars">0</strong></div>
+        <div class="bar-divider"></div>
+        <div class="bar-stat"><i class="fas fa-clock"></i>&nbsp;Lettura: <strong id="bar-read">—</strong></div>
+        <div class="bar-divider"></div>
+        <div class="bar-stat"><i class="fas fa-align-left"></i>&nbsp;Frasi: <strong id="bar-sentences">0</strong></div>
+        <div class="bar-spacer"></div>
+        <div class="bar-timer">Scrittura: <strong id="bar-timer">00:00</strong></div>
+    </div>
+
+    <nav class="mobile-tabs" aria-label="Navigazione mobile">
+        <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+        <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-search"></i><span>Cerca</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Trend</span></a>
+    </nav>
+
+    <footer id="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <script src="../data/search-index.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/word-counter.js"></script>
+</body>
+
+</html>
