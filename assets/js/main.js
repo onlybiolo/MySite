@@ -3,6 +3,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const isSubfolder = window.location.pathname.includes('/tools/');
     const menuToggle = document.getElementById('menu-toggle');
     const sideBar = document.getElementById('side-bar');
+    // Global Analytics / Usage Tracking
+    window.trackUsage = function (toolId, toolName) {
+        // Evita di tracciare durante lo sviluppo locale se necessario
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log(`[Dev] Tracking: ${toolName} (${toolId})`);
+        }
+
+        fetch('/.netlify/functions/track-usage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ toolId, toolName })
+        }).catch(err => console.error("Tracking error:", err));
+    };
     const body = document.body;
 
     /* --- THEME LOGIC (Centralized) --- */

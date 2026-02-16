@@ -336,6 +336,10 @@ async function downloadAll() {
 }
 
 async function downloadSingle(item) {
+    // Tracking
+    if (typeof trackUsage === 'function') {
+        trackUsage('image-compressor', 'Image Compressor');
+    }
     var blob = await compressImage(item);
     var ext = getOutputExt(getOutputFormat(item));
     var baseName = item.file.name.replace(/\.[^.]+$/, '');
@@ -343,6 +347,10 @@ async function downloadSingle(item) {
 }
 
 async function downloadBatch() {
+    // Tracking
+    if (typeof trackUsage === 'function') {
+        trackUsage('image-compressor', 'Image Compressor');
+    }
     var zip = new JSZip();
     for (var i = 0; i < images.length; i++) {
         showProgress('Compressione ' + (i + 1) + '/' + images.length + '…', 5 + Math.round((i / images.length) * 90));

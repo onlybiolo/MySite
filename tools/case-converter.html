@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Converter: Converti Testo Online Gratis | Btoolsify</title>
+
+    <!-- Theme Script (Anti-FOUC) -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Converti testo in UPPERCASE, lowercase, Title Case, camelCase, snake_case, kebab-case e molto altro. Slug generator, social media mode, stats in tempo reale. Gratis, senza login.">
+    <meta name="keywords"
+        content="case converter, maiuscolo minuscolo, title case, camelCase, snake_case, kebab-case, slug generator, convertitore testo">
+    <meta name="author" content="Btoolsify">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://btoolsify.netlify.app/tools/case-converter.html">
+    <meta property="og:title" content="Case Converter - Btoolsify">
+    <meta property="og:description"
+        content="Converti testo in qualsiasi formato: UPPER, lower, Title, camelCase, snake_case e altro.">
+    <meta property="og:image" content="https://btoolsify.netlify.app/apple-touch-icon.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Case Converter - Btoolsify">
+    <meta property="twitter:description" content="Converti testo online gratis in qualsiasi case format.">
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="canonical" href="https://btoolsify.netlify.app/tools/case-converter.html">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ── Layout ── */
+        .cc-grid {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 16px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .cc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Editor panels ── */
+        .cc-editor-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .cc-panel {
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .cc-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .cc-panel-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cc-actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .cc-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 18px;
+            border: none;
+            outline: none;
+            resize: vertical;
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-size: 1rem;
+            line-height: 1.8;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+
+        .cc-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .cc-textarea[readonly] {
+            background: var(--bg-surface);
+        }
+
+        /* ── Buttons shared ── */
+        .btn-sm {
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .btn-sm:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .btn-sm.danger:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .btn-sm.accent {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .btn-sm.accent:hover {
+            opacity: 0.9;
+        }
+
+        /* ── Swap button ── */
+        .cc-swap-row {
+            display: flex;
+            justify-content: center;
+            margin: -6px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-swap {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--border-subtle);
+            background: var(--bg-body);
+            color: var(--brand-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-swap:hover {
+            background: var(--brand-primary);
+            color: white;
+            border-color: var(--brand-primary);
+            transform: rotate(180deg);
+        }
+
+        /* ── Mode sections ── */
+        .cc-section {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .cc-section:last-child {
+            border-bottom: none;
+        }
+
+        .cc-section-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ── Case/Util pill buttons ── */
+        .cc-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .cc-pill {
+            padding: 5px 11px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .cc-pill:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            background: rgba(79, 70, 229, 0.06);
+        }
+
+        .cc-pill.active {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        /* ── Right panel (stats + controls) ── */
+        .cc-sidebar {
+            background: var(--bg-body);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+            position: sticky;
+            top: 80px;
+        }
+
+        /* ── Stat grid ── */
+        .cc-stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+        }
+
+        .cc-stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 9px 10px;
+            text-align: center;
+        }
+
+        .cc-stat-val {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            line-height: 1;
+            margin-bottom: 3px;
+        }
+
+        .cc-stat-label {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .cc-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.8rem;
+        }
+
+        .cc-stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .cc-stat-row-label {
+            color: var(--text-muted);
+        }
+
+        .cc-stat-row-val {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* ── Live mode toggle ── */
+        .cc-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cc-toggle-row label {
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        .cc-toggle {
+            position: relative;
+            width: 38px;
+            height: 20px;
+            background: var(--border-subtle);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+            border: none;
+        }
+
+        .cc-toggle.on {
+            background: var(--brand-primary);
+        }
+
+        .cc-toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            transition: left 0.2s;
+        }
+
+        .cc-toggle.on::after {
+            left: 21px;
+        }
+
+        /* ── Quick actions row ── */
+        .cc-quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .btn-action-block {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-action-block:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .btn-action-block.full {
+            grid-column: 1 / -1;
+        }
+
+        .btn-action-block.download {
+            background: linear-gradient(135deg, var(--brand-primary), var(--accent-color, #7c3aed));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.25);
+        }
+
+        .btn-action-block.download:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* ── Convert button (manual mode) ── */
+        #convert-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, var(--brand-primary), var(--accent-color, #7c3aed));
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        #convert-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ── Privacy badge ── */
+        .trust-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(5, 150, 105, 0.1);
+            color: #059669;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            width: 100%;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        /* ── Toast ── */
+        .cc-toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .cc-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .cc-toast-success {
+            background: #059669;
+            color: white;
+        }
+
+        .cc-toast-error {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="logo">
+                <a href="../index.html" aria-label="Btoolsify - Torna alla homepage"><strong>Btoolsify</strong></a>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="search" id="search-bar" placeholder="Cerca strumenti..." aria-label="Cerca strumenti"
+                autocomplete="off">
+            <button id="search-btn" aria-label="Cerca"><i class="fas fa-search"></i></button>
+            <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+
+        <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambia tema"><i class="fas fa-moon"></i></button>
+            <button id="mobile-search-toggle" aria-label="Apri ricerca"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav id="side-bar" aria-label="Menu principale">
+            <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Hot</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-info-circle"></i><span>Chi Siamo</span></a>
+            <a href="#" onclick="showComingSoon(event)"><i class="fas fa-envelope"></i><span>Contatti</span></a>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../tools.html">Strumenti</a></li>
+                    <li aria-current="page">Case Converter</li>
+                </ol>
+            </nav>
+
+            <div class="content-section">
+                <h1 class="section-title">Case Converter</h1>
+                <p class="section-intro" style="margin-bottom:20px;color:var(--text-muted);">
+                    Converti testo in qualsiasi formato — UPPER, lower, Title, camelCase, slug e altro.<br>
+                    <strong>Privacy 100%</strong> — tutto elaborato nel browser, nessun upload.
+                </p>
+
+                <div class="cc-grid">
+
+                    <!-- ══════ LEFT: Editor ══════ -->
+                    <div class="cc-editor-wrap">
+
+                        <!-- Input -->
+                        <div class="cc-panel">
+                            <div class="cc-panel-header">
+                                <span class="cc-panel-title"><i class="fas fa-keyboard"></i> Input</span>
+                                <div class="cc-actions">
+                                    <button class="btn-sm" onclick="ccPaste()" title="Incolla dagli appunti"><i
+                                            class="fas fa-paste"></i> Incolla</button>
+                                    <button class="btn-sm" onclick="ccCopyInput()" title="Copia input"><i
+                                            class="fas fa-copy"></i></button>
+                                    <button class="btn-sm danger" onclick="ccClear()" title="Cancella tutto"><i
+                                            class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <textarea id="cc-input" class="cc-textarea"
+                                placeholder="Incolla o scrivi il tuo testo qui...&#10;&#10;Prova con: the NASA mission was a SUCCESS and they went HOME"
+                                aria-label="Testo di input" spellcheck="false"></textarea>
+                        </div>
+
+                        <!-- Swap -->
+                        <div class="cc-swap-row">
+                            <button class="btn-swap" onclick="ccSwap()" title="Scambia input e output">
+                                <i class="fas fa-exchange-alt fa-rotate-90"></i>
+                            </button>
+                        </div>
+
+                        <!-- Output -->
+                        <div class="cc-panel">
+                            <div class="cc-panel-header">
+                                <span class="cc-panel-title"><i class="fas fa-magic"></i> Output</span>
+                                <div class="cc-actions">
+                                    <button class="btn-sm accent" onclick="ccCopyOutput()" title="Copia output"><i
+                                            class="fas fa-copy"></i> Copia</button>
+                                    <button class="btn-sm" onclick="ccDownload()" title="Scarica come .txt"><i
+                                            class="fas fa-download"></i></button>
+                                </div>
+                            </div>
+                            <textarea id="cc-output" class="cc-textarea" readonly
+                                placeholder="Il testo convertito apparirà qui..." aria-label="Testo di output"
+                                aria-live="polite"></textarea>
+                        </div>
+
+                        <!-- ── Conversion Mode Sections (below editor on mobile, inline on desktop) ── -->
+
+                        <!-- Standard Cases -->
+                        <div class="cc-panel">
+                            <div class="cc-section">
+                                <div class="cc-section-title"><i class="fas fa-font"></i> Conversioni Standard</div>
+                                <div class="cc-pills">
+                                    <button class="cc-pill" data-case="upper">UPPERCASE</button>
+                                    <button class="cc-pill" data-case="lower">lowercase</button>
+                                    <button class="cc-pill" data-case="title">Title Case</button>
+                                    <button class="cc-pill" data-case="sentence">Sentence case</button>
+                                    <button class="cc-pill" data-case="camel">camelCase</button>
+                                    <button class="cc-pill" data-case="pascal">PascalCase</button>
+                                    <button class="cc-pill" data-case="snake">snake_case</button>
+                                    <button class="cc-pill" data-case="screaming">SCREAMING_SNAKE</button>
+                                    <button class="cc-pill" data-case="kebab">kebab-case</button>
+                                    <button class="cc-pill" data-case="train">Train-Case</button>
+                                    <button class="cc-pill" data-case="dot">dot.case</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Utility Transforms -->
+                        <div class="cc-panel">
+                            <div class="cc-section">
+                                <div class="cc-section-title"><i class="fas fa-wrench"></i> Utility Transforms</div>
+                                <div class="cc-pills">
+                                    <button class="cc-pill" data-util="extra-spaces">Rimuovi spazi extra</button>
+                                    <button class="cc-pill" data-util="trim">Trim</button>
+                                    <button class="cc-pill" data-util="remove-breaks">Rimuovi a capo</button>
+                                    <button class="cc-pill" data-util="breaks-to-comma">A capo → virgola</button>
+                                    <button class="cc-pill" data-util="remove-punctuation">Rimuovi
+                                        punteggiatura</button>
+                                    <button class="cc-pill" data-util="remove-numbers">Rimuovi numeri</button>
+                                    <button class="cc-pill" data-util="remove-special">Rimuovi caratteri
+                                        speciali</button>
+                                    <button class="cc-pill" data-util="reverse-text">Inverti testo</button>
+                                    <button class="cc-pill" data-util="reverse-words">Inverti parole</button>
+                                    <button class="cc-pill" data-util="sort-words">Ordina parole A-Z</button>
+                                    <button class="cc-pill" data-util="randomize-words">Randomizza parole</button>
+                                    <button class="cc-pill" data-util="dedupe-lines">Rimuovi righe duplicate</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pro Mode: Slug + Social + Programming -->
+                        <div class="cc-panel">
+                            <div class="cc-section">
+                                <div class="cc-section-title"><i class="fas fa-rocket"></i> Slug Generator</div>
+                                <div class="cc-pills">
+                                    <button class="cc-pill" data-case="slug">🔥 Genera Slug</button>
+                                </div>
+                            </div>
+                            <div class="cc-section">
+                                <div class="cc-section-title"><i class="fas fa-hashtag"></i> Social Media</div>
+                                <div class="cc-pills">
+                                    <button class="cc-pill" data-util="twitter-safe">Twitter Safe (280)</button>
+                                    <button class="cc-pill" data-util="remove-emojis">Rimuovi Emoji</button>
+                                    <button class="cc-pill" data-util="to-hashtags">Converti in #Hashtag</button>
+                                    <button class="cc-pill" data-util="remove-hashtags">Rimuovi #Hashtag</button>
+                                </div>
+                            </div>
+                            <div class="cc-section">
+                                <div class="cc-section-title"><i class="fas fa-code"></i> Programming Helper</div>
+                                <div class="cc-pills">
+                                    <button class="cc-pill" data-case="constant">CONSTANT_CASE</button>
+                                    <button class="cc-pill" data-case="variable">variableName</button>
+                                    <button class="cc-pill" data-case="classname">ClassName</button>
+                                    <button class="cc-pill" data-util="quote-lines">Aggiungi "quotes"</button>
+                                    <button class="cc-pill" data-util="comma-lines">Aggiungi virgola</button>
+                                    <button class="cc-pill" data-util="array-wrap">Wrap in [ array ]</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- /cc-editor-wrap -->
+
+                    <!-- ══════ RIGHT: Stats & Controls ══════ -->
+                    <div class="cc-sidebar" role="region" aria-label="Statistiche">
+
+                        <!-- Stats -->
+                        <div class="cc-section">
+                            <div class="cc-section-title">📊 Statistiche</div>
+                            <div class="cc-stat-grid">
+                                <div class="cc-stat-card">
+                                    <div class="cc-stat-val" id="st-chars">0</div>
+                                    <div class="cc-stat-label">Caratteri</div>
+                                </div>
+                                <div class="cc-stat-card">
+                                    <div class="cc-stat-val" id="st-chars-ns">0</div>
+                                    <div class="cc-stat-label">Senza spazi</div>
+                                </div>
+                                <div class="cc-stat-card">
+                                    <div class="cc-stat-val" id="st-words">0</div>
+                                    <div class="cc-stat-label">Parole</div>
+                                </div>
+                                <div class="cc-stat-card">
+                                    <div class="cc-stat-val" id="st-sentences">0</div>
+                                    <div class="cc-stat-label">Frasi</div>
+                                </div>
+                                <div class="cc-stat-card">
+                                    <div class="cc-stat-val" id="st-lines">0</div>
+                                    <div class="cc-stat-label">Righe</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tempi -->
+                        <div class="cc-section">
+                            <div class="cc-section-title">⏱ Tempi</div>
+                            <div class="cc-stat-row">
+                                <span class="cc-stat-row-label"><i class="fas fa-book-reader"></i> Lettura</span>
+                                <span class="cc-stat-row-val" id="st-read">—</span>
+                            </div>
+                            <div class="cc-stat-row">
+                                <span class="cc-stat-row-label"><i class="fas fa-microphone"></i> Parlato</span>
+                                <span class="cc-stat-row-val" id="st-speak">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Live Mode -->
+                        <div class="cc-section">
+                            <div class="cc-section-title">⚡ Modalità</div>
+                            <div class="cc-toggle-row">
+                                <label>Converti in tempo reale</label>
+                                <button class="cc-toggle on" id="live-toggle" aria-label="Toggle live mode"></button>
+                            </div>
+                            <div style="margin-top:10px;">
+                                <button id="convert-btn"><i class="fas fa-sync-alt"></i> Converti ora</button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="cc-section">
+                            <div class="cc-section-title">🎯 Azioni Rapide</div>
+                            <div class="cc-quick-actions">
+                                <button class="btn-action-block" onclick="ccCopyOutput()"><i class="fas fa-copy"></i>
+                                    Copia output</button>
+                                <button class="btn-action-block" onclick="ccCopyInput()"><i class="fas fa-copy"></i>
+                                    Copia input</button>
+                                <button class="btn-action-block" onclick="ccPaste()"><i class="fas fa-paste"></i>
+                                    Incolla</button>
+                                <button class="btn-action-block" onclick="ccClear()"><i class="fas fa-eraser"></i>
+                                    Pulisci</button>
+                                <button class="btn-action-block download full" onclick="ccDownload()"><i
+                                        class="fas fa-download"></i> Scarica .txt</button>
+                            </div>
+                        </div>
+
+                        <!-- Trust -->
+                        <div class="cc-section">
+                            <div class="trust-badge">
+                                <i class="fas fa-shield-alt"></i> Nessun upload — tutto nel browser
+                            </div>
+                        </div>
+
+                    </div><!-- /cc-sidebar -->
+
+                </div><!-- /cc-grid -->
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside id="right-sidebar">
+            <div class="sidebar-section">
+                <h4><i class="fas fa-fire"></i> Più Popolari</h4>
+                <ul class="trending-list">
+                    <li><a href="word-counter.html">Word Counter</a></li>
+                    <li><a href="image-resizer.html">Image Resizer</a></li>
+                    <li><a href="jpg-to-pdf.html">JPG to PDF</a></li>
+                    <li><a href="merge-pdf.html">Merge PDF</a></li>
+                    <li><a href="case-converter.html" class="active">Case Converter</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section ad-placeholder">
+                <p>Annuncio</p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-tabs" aria-label="Navigazione mobile">
+        <a href="../index.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+        <a href="../blog.html"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-search"></i><span>Cerca</span></a>
+        <a href="#" onclick="showComingSoon(event)"><i class="fas fa-fire"></i><span>Trend</span></a>
+    </nav>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../data/search-index.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/case-converter.js"></script>
+</body>
+
+</html>

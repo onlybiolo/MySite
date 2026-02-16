@@ -118,6 +118,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Real Data Tracking
+        if (typeof trackUsage === 'function') {
+            trackUsage('jpg-to-pdf', 'JPG to PDF');
+        }
+
         // UI Loading State
         convertBtn.disabled = true;
         btnText.textContent = "Generazione PDF...";

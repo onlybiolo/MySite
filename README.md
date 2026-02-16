@@ -54,6 +54,7 @@ MySite/
 │   │   ├── contrast-checker.js # Logic for contrast checker
 │   │   ├── qr-generator.js   # Logic for QR code generator
 │   │   └── word-counter.js   # Logic for word counter
+|   |   ├── con
 │   ├── json/palettedata.json # Palette data
 │   └── wasm/                 # WebAssembly modules (image compression)
 ├── tools/                    # Individual tool pages

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Accessibility: Oltre il Contrasto | Btoolsify Blog</title>
+    <meta name="description"
+        content="Perché rendere il tuo sito accessibile non è solo un dovere etico, ma una mossa di business intelligente. Guida all'accessibilità web.">
+    <meta name="keywords" content="blog, design, accessibilità, contrasto, a11y, web development, inclusività">
+    <meta name="author" content="Derek Biolo">
+    <script>(function () { const theme = localStorage.getItem('theme') || 'light'; document.documentElement.setAttribute('data-theme', theme); })();</script>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header id="header">
+        <div class="header-left">
+            <button id="menu-toggle" aria-label="Apri menu"><span></span><span></span><span></span></button>
+            <div class="logo"><a href="../index.html"><strong>Btoolsify</strong></a></div>
+        </div>
+        <div class="header-right"><button id="theme-toggle"><i class="fas fa-moon"></i></button></div>
+    </header>
+    <div class="reading-controls"><button id="reading-mode-toggle" class="reading-mode-toggle"><i
+                class="fas fa-expand-alt"></i></button></div>
+    <div class="app-container">
+        <nav id="side-bar">
+            <a href="../hot.html"><i class="fas fa-fire"></i><span>Hot</span></a>
+            <a href="../tools.html"><i class="fas fa-tools"></i><span>Strumenti</span></a>
+            <a href="../blog.html" class="active"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        </nav>
+        <main id="main-content">
+            <article class="blog-article-container">
+                <header class="blog-header">
+                    <span class="blog-category">Design & Tech</span>
+                    <h1 class="blog-title">Web Accessibility: Oltre il Contrasto</h1>
+                    <div class="blog-meta">
+                        <span><i class="far fa-clock"></i> 5 min di lettura</span>
+                        <span><i class="far fa-calendar"></i> Oggi</span>
+                    </div>
+                </header>
+                <div class="blog-content">
+                    <p>Un web accessibile è un web migliore per tutti. L'accessibilità non riguarda solo le persone con
+                        disabilità permanenti, ma anche chi usa il telefono sotto il sole forte o chi ha una mano
+                        libera. È una questione di design inclusivo e universale.</p>
+                </div>
+                <footer class="blog-footer">
+                    <div class="blog-cta-box">
+                        <h4>I tuoi colori sono leggibili?</h4>
+                        <p>Verifica istantaneamente il contrasto tra testo e sfondo con il nostro Contrast Checker
+                            gratuito.</p>
+                        <a href="../tools/contrast-checker.html" class="hero-btn">Controlla Contrasto <i
+                                class="fas fa-arrow-right"></i></a>
+                    </div>
+                </footer>
+            </article>
+        </main>
+    </div>
+    <footer id="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Btoolsify. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

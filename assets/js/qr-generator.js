@@ -74,5 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
         link.download = 'btoolsify-qr-code.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
+
+        // Tracking
+        if (typeof trackUsage === 'function') {
+            trackUsage('qr-generator', 'QR Generator');
+        }
     };
 });

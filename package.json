@@ -1,0 +1,9 @@
+{
+    "name": "btoolsify",
+    "version": "1.0.0",
+    "description": "Btoolsify Utility Suite",
+    "main": "index.js",
+    "dependencies": {
+        "pg": "^8.11.3"
+    }
+}

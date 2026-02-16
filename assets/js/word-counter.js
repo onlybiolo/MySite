@@ -132,8 +132,15 @@ function getWordList(text) {
 
 // ── Analisi principale ────────────────────────
 function analyzeText() {
-    var text = document.getElementById('editor').value;
+    var editor = document.getElementById('editor');
+    if (!editor) return;
+    var text = editor.value;
 
+    // Tracking (Throttle to avoid spamming DB)
+    if (typeof trackUsage === 'function' && !window.wordCounterTracked && text.length > 50) {
+        trackUsage('word-counter', 'Word Counter');
+        window.wordCounterTracked = true; // Track once per session/load
+    }
     // Rileva lingua
     if (text.length > 50) detectedLang = detectLanguage(text);
     updateLangBadge();
@@ -536,14 +543,82 @@ function exportTxt() {
 function exportPdf() {
     var text = document.getElementById('editor').value;
     if (!text.trim()) { alert('Nessun testo!'); return; }
-    var win = window.open('', '_blank');
-    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Btoolsify Export</title>' +
-        '<style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.8;color:#111;padding:0 20px;}' +
-        'h1{font-size:18px;color:#4f46e5;border-bottom:2px solid #4f46e5;padding-bottom:8px;}p{margin:0 0 16px;}</style></head><body>' +
-        '<h1>Testo esportato da Btoolsify</h1>' +
-        '<div>' + text.split('\n').map(function (l) { return l.trim() ? '<p>' + escapeHtml(l) + '</p>' : '<br>'; }).join('') + '</div>' +
-        '<script>window.print();window.onafterprint=function(){window.close();}<\/script></body></html>');
-    win.document.close();
+
+    // Gather stats for the summary header
+    var wordList = getWordList(text);
+    var words = wordList.length;
+    var chars = text.length;
+    var charsNoSpaces = text.replace(/\s/g, '').length;
+    var sentences = countSentences(text);
+    var readTime = readingTime(words);
+    var now = new Date();
+    var dateStr = now.toLocaleDateString('it-IT', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    // Format paragraphs
+    var formattedText = text.split('\n').map(function (l) {
+        return l.trim() ? '<p>' + escapeHtml(l) + '</p>' : '';
+    }).filter(Boolean).join('');
+
+    // Build a complete HTML page for printing
+    var htmlContent = '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
+        '<title>Documento - Btoolsify Word Counter</title>' +
+        '<style>' +
+        '@page { margin: 2cm; size: A4; }' +
+        '@media print { header, footer { display: none; } }' +
+        'body { font-family: "Georgia", "Times New Roman", serif; max-width: 700px; margin: 0 auto; font-size: 13px; line-height: 1.9; color: #1a1a1a; }' +
+        '.doc-header { border-bottom: 3px solid #4f46e5; padding-bottom: 16px; margin-bottom: 24px; }' +
+        '.doc-header h1 { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 20px; color: #4f46e5; margin: 0 0 6px 0; }' +
+        '.doc-header .subtitle { font-size: 11px; color: #666; margin: 0; }' +
+        '.stats-bar { display: flex; gap: 20px; flex-wrap: wrap; padding: 10px 16px; background: #f8f7ff; border-radius: 8px; margin-bottom: 24px; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 11px; color: #555; }' +
+        '.stats-bar .stat { display: flex; gap: 4px; }' +
+        '.stats-bar .stat strong { color: #4f46e5; }' +
+        '.content p { margin: 0 0 14px 0; text-align: justify; }' +
+        '.doc-footer { margin-top: 30px; padding-top: 12px; border-top: 1px solid #e5e5e5; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9px; color: #999; text-align: center; }' +
+        '</style></head><body>' +
+        '<div class="doc-header">' +
+        '<h1>Documento</h1>' +
+        '<p class="subtitle">Esportato da Btoolsify Word Counter &bull; ' + dateStr + '</p>' +
+        '</div>' +
+        '<div class="stats-bar">' +
+        '<div class="stat"><strong>' + words + '</strong> parole</div>' +
+        '<div class="stat"><strong>' + chars + '</strong> caratteri</div>' +
+        '<div class="stat"><strong>' + charsNoSpaces + '</strong> senza spazi</div>' +
+        '<div class="stat"><strong>' + sentences + '</strong> frasi</div>' +
+        '<div class="stat">Lettura: <strong>' + readTime + '</strong></div>' +
+        '</div>' +
+        '<div class="content">' + formattedText + '</div>' +
+        '<div class="doc-footer">Generato con btoolsify.netlify.app</div>' +
+        '</body></html>';
+
+    // Use an iframe to avoid about:blank showing in PDF headers
+    var iframe = document.createElement('iframe');
+    iframe.style.cssText = 'position:fixed;left:-9999px;top:0;width:800px;height:600px;border:none;';
+    document.body.appendChild(iframe);
+
+    iframe.contentDocument.open();
+    iframe.contentDocument.write(htmlContent);
+    iframe.contentDocument.close();
+
+    // Wait for content to render, then print
+    iframe.onload = function () {
+        setTimeout(function () {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+            // Clean up after printing
+            setTimeout(function () { document.body.removeChild(iframe); }, 1000);
+        }, 300);
+    };
+
+    // Fallback if onload doesn't fire (some browsers)
+    setTimeout(function () {
+        try {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+            setTimeout(function () {
+                if (iframe.parentNode) document.body.removeChild(iframe);
+            }, 1000);
+        } catch (e) { }
+    }, 1500);
 }
 
 // ── Helpers ───────────────────────────────────

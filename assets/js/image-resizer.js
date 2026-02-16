@@ -86,8 +86,14 @@ function loadImage(file) {
     return new Promise((res, rej) => {
         const img = new Image();
         const url = URL.createObjectURL(file);
-        img.onload = () => { res(img); };
-        img.onerror = rej;
+        img.onload = () => {
+            URL.revokeObjectURL(url); // prevent memory leak
+            res(img);
+        };
+        img.onerror = () => {
+            URL.revokeObjectURL(url);
+            rej(new Error('Impossibile caricare: ' + file.name));
+        };
         img.src = url;
     });
 }
@@ -229,21 +235,27 @@ function renderToCanvas(item, targetW, targetH, quality, format) {
     }
 
     // High quality downsampling — step-down for large reductions
+    // Each step halves the image until close to target, then final resize
     if (targetW < item.originalW / 2 || targetH < item.originalH / 2) {
         let src = item.img;
         let cw = item.originalW, ch = item.originalH;
-        const tempCanvas = document.createElement('canvas');
-        const tempCtx = tempCanvas.getContext('2d');
 
         while (cw > targetW * 2 || ch > targetH * 2) {
-            cw = Math.max(Math.round(cw / 2), targetW);
-            ch = Math.max(Math.round(ch / 2), targetH);
-            tempCanvas.width = cw; tempCanvas.height = ch;
-            tempCtx.imageSmoothingEnabled = true;
-            tempCtx.imageSmoothingQuality = 'high';
-            tempCtx.drawImage(src, 0, 0, cw, ch);
-            src = tempCanvas;
+            const newW = Math.max(Math.round(cw / 2), targetW);
+            const newH = Math.max(Math.round(ch / 2), targetH);
+            // Create a NEW canvas for each step to avoid overwriting source
+            const stepCanvas = document.createElement('canvas');
+            stepCanvas.width = newW;
+            stepCanvas.height = newH;
+            const stepCtx = stepCanvas.getContext('2d');
+            stepCtx.imageSmoothingEnabled = true;
+            stepCtx.imageSmoothingQuality = 'high';
+            stepCtx.drawImage(src, 0, 0, newW, newH);
+            src = stepCanvas;
+            cw = newW;
+            ch = newH;
         }
+
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(src, 0, 0, targetW, targetH);
