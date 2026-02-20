@@ -18,6 +18,8 @@ exports.handler = async (event) => {
 
     try {
         await client.connect();
+        console.log(`Connected to Neon DB. Tracking usage for: ${toolId}`);
+
         const query = `
       INSERT INTO tool_usage (tool_id, tool_name, usage_count, last_updated)
       VALUES ($1, $2, 1, CURRENT_TIMESTAMP)
@@ -25,13 +27,14 @@ exports.handler = async (event) => {
       DO UPDATE SET usage_count = tool_usage.usage_count + 1, last_updated = CURRENT_TIMESTAMP;
     `;
         await client.query(query, [toolId, toolName]);
+        console.log(`Successfully updated usage_count for ${toolId}`);
 
         return {
             statusCode: 200,
             body: JSON.stringify({ message: "Usage tracked successfully" }),
         };
     } catch (err) {
-        console.error(err);
+        console.error("Database connection/query error:", err);
         return { statusCode: 500, body: "Internal Server Error" };
     } finally {
         await client.end();

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Evita di tracciare durante lo sviluppo locale se necessario
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             console.log(`[Dev] Tracking: ${toolName} (${toolId})`);
+            return; // Non inviare fetch in locale per non sporcare i dati
         }
 
         fetch('/.netlify/functions/track-usage', {
@@ -16,6 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({ toolId, toolName })
         }).catch(err => console.error("Tracking error:", err));
     };
+
+    // Auto-track tool pages
+    if (isSubfolder) {
+        const fileName = window.location.pathname.split('/').pop();
+        const toolId = fileName.replace('.html', '');
+        const toolName = document.querySelector('h1')?.textContent.trim() || document.title.split(':')[0].trim();
+
+        if (toolId && toolName && !toolId.includes('placeholder') && toolId !== 'index') {
+            window.trackUsage(toolId, toolName);
+        }
+    }
     const body = document.body;
 
     /* --- THEME LOGIC (Centralized) --- */
